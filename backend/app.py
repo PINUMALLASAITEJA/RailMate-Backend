@@ -1,12 +1,11 @@
 import os
 import logging
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
 from database.db_connection import db
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
-
 logger.info("=== Starting RailMate Backend ===")
 
 # --- Load Environment Variables ---
@@ -14,7 +13,7 @@ MONGO_URI = os.environ.get("MONGO_URI")
 JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "railmate_secret_key")
 
 if not MONGO_URI:
-    logger.error("❌ MONGO_URI missing in environment. Set it in .env for local or Vercel env vars for deployment.")
+    logger.error("❌ MONGO_URI missing in environment.")
 else:
     logger.info("✅ MONGO_URI loaded (hidden for security).")
 
@@ -22,24 +21,39 @@ else:
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
 
-# --- CORS ---
-CORS(app, resources={
-    r"/*": {
-        "origins": [
-            "http://localhost:5173",
-            "https://rail-mate-frontend.vercel.app"
-        ],
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
-    }
-})
+# --- Allowed CORS Origins ---
+ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "https://rail-mate-frontend.vercel.app",
+    "https://rail-mate-frontend-git-main-pinumalla-sai-tejas-projects.vercel.app",
+    "https://rail-mate-frontend-*.vercel.app",
+]
+
+# --- Enable CORS ---
+CORS(
+    app,
+    supports_credentials=True,
+    origins=ALLOWED_ORIGINS,
+    allow_headers=["Content-Type", "Authorization"],
+    methods=["GET", "POST", "OPTIONS"]
+)
+
+# --- Manual OPTIONS handler (fixes redirect issue) ---
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        response = make_response()
+        response.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin", "")
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        return response, 200
 
 # --- Try Database Connection ---
 def try_connect_mongo():
     try:
         from pymongo import MongoClient
-        client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=8000)
+        client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=7000)
         client.admin.command("ping")
         logger.info("✅ MongoDB connection successful.")
         return client
@@ -50,7 +64,7 @@ def try_connect_mongo():
 
 client = try_connect_mongo()
 
-# --- Import Routes ---
+# --- ROUTES ---
 from routes.auth_routes import auth_bp
 from routes.trains_routes import trains_bp
 from routes.booking import booking_bp
@@ -83,5 +97,5 @@ def home():
     })
 
 if __name__ == "__main__":
-    logger.info("🚀 Starting local server on http://0.0.0.0:5000")
+    logger.info("🚀 Running locally at http://0.0.0.0:5000")
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

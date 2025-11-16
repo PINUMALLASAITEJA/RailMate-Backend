@@ -1,9 +1,11 @@
 // src/api/railmateAPI.js
 
-// 🌍 Auto-detect backend URL
-const API_URL =
+// 🌍 Backend URL (trim trailing slashes)
+const RAW_URL =
   import.meta.env.VITE_API_URL ||
-  "https://rail-mate-backend.vercel.app/";  // backend URL
+  "https://rail-mate-backend.vercel.app";
+
+const API_URL = RAW_URL.replace(/\/+$/, ""); // remove trailing slash
 
 // 🚆 Fetch trains
 export const getTrains = async () => {
