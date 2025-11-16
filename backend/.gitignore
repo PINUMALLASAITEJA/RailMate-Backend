@@ -1,0 +1,11 @@
+# Ignore environment files and system stuff
+.env
+__pycache__/
+*.pyc
+instance/
+.DS_Store
+.vscode/
+.idea/
+venv/
+.env.bak
+".env" 
