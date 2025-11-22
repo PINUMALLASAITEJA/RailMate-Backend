@@ -1,11 +1,13 @@
 // src/api/railmateAPI.js
 
-// 🌍 Backend URL (trim trailing slashes)
+// 🌍 Normalize backend URL (remove trailing slash)
 const RAW_URL =
   import.meta.env.VITE_API_URL ||
   "https://rail-mate-backend.vercel.app";
 
-const API_URL = RAW_URL.replace(/\/+$/, ""); // remove trailing slash
+const API_URL = RAW_URL.replace(/\/+$/, ""); // remove trailing slashes
+
+console.log("🔗 RailMate API:", API_URL);
 
 // 🚆 Fetch trains
 export const getTrains = async () => {
@@ -28,7 +30,7 @@ export const bookTicket = async (data) => {
   return await res.json();
 };
 
-// 🧾 Register
+// 🧾 Register User
 export async function registerUser(userData) {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
@@ -38,14 +40,14 @@ export async function registerUser(userData) {
   });
 
   if (!res.ok) {
-    const err = await res.json();
+    const err = await res.json().catch(() => ({ error: "Registration failed" }));
     throw new Error(err.error || "Registration failed");
   }
 
   return await res.json();
 }
 
-// 🔑 Login
+// 🔑 Login User
 export async function loginUser(credentials) {
   const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
@@ -55,14 +57,14 @@ export async function loginUser(credentials) {
   });
 
   if (!res.ok) {
-    const err = await res.json();
+    const err = await res.json().catch(() => ({ error: "Login failed" }));
     throw new Error(err.error || "Login failed");
   }
 
   return await res.json();
 }
 
-// 👤 Profile
+// 👤 Fetch Profile
 export async function getProfile() {
   const token = localStorage.getItem("token");
   if (!token) throw new Error("No token found");
@@ -77,7 +79,7 @@ export async function getProfile() {
   });
 
   if (!res.ok) {
-    const err = await res.json();
+    const err = await res.json().catch(() => ({ error: "Profile fetch failed" }));
     throw new Error(err.error || "Failed to fetch profile");
   }
 
