@@ -25,8 +25,7 @@ app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
 ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://rail-mate-frontend.vercel.app",
-    "https://rail-mate-frontend-git-main-pinumalla-sai-tejas-projects.vercel.app",
-    "https://rail-mate-frontend-*.vercel.app",
+    "https://rail-mate-frontend-4kb9zahza-pinumalla-sai-tejas-projects.vercel.app"
 ]
 
 # --- Enable CORS ---
@@ -38,12 +37,14 @@ CORS(
     methods=["GET", "POST", "OPTIONS"]
 )
 
-# --- Manual OPTIONS handler (fixes redirect issue) ---
+# --- Manual OPTIONS handler ---
 @app.before_request
 def handle_preflight():
     if request.method == "OPTIONS":
         response = make_response()
-        response.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin", "")
+        origin = request.headers.get("Origin", "")
+        if origin in ALLOWED_ORIGINS:
+            response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
         response.headers["Access-Control-Allow-Credentials"] = "true"
@@ -79,21 +80,11 @@ app.register_blueprint(bookings_bp)
 app.register_blueprint(cancel_bp)
 app.register_blueprint(history_bp)
 
-# --- Home Route ---
 @app.route("/")
 def home():
     return jsonify({
         "status": "✅ RailMate API Active",
-        "message": "Welcome to RailMate Cloud API",
-        "available_endpoints": [
-            "/auth/register",
-            "/auth/login",
-            "/auth/profile",
-            "/trains",
-            "/book_ticket",
-            "/cancel_ticket",
-            "/my_tickets"
-        ]
+        "message": "Welcome to RailMate Cloud API"
     })
 
 if __name__ == "__main__":
