@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { loginUser } from "../api/railmateAPI";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  // ✅ Redirect if already logged in (using sessionStorage)
+  // 🚀 Redirect if token already exists
   useEffect(() => {
-    // FIX: Using sessionStorage for consistency across the app.
-    const token = sessionStorage.getItem("token");
-    if (token) navigate("/"); // If token exists, go home.
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/book");  // Go to booking page directly
+    }
   }, [navigate]);
 
   const handleChange = (e) => {
@@ -25,16 +26,22 @@ const Login = () => {
       const data = await loginUser(formData);
 
       if (data.token) {
-        // ✅ Store tokens in sessionStorage
-        sessionStorage.setItem("token", data.token);
-        sessionStorage.setItem("username", data.username || formData.email.split("@")[0]);
+        // Save JWT & username to localStorage
+        localStorage.setItem("token", data.token);
+        localStorage.setItem(
+          "username",
+          data.username || formData.email.split("@")[0]
+        );
 
         setMessage("✅ Login Successful!");
-        setTimeout(() => navigate("/"), 1000);
+
+        setTimeout(() => {
+          navigate("/book"); // Redirect to booking page
+        }, 500);
       } else {
-        setMessage("❌ Invalid credentials");
+        setMessage("❌ Invalid Credentials");
       }
-    } catch {
+    } catch (error) {
       setMessage("⚠️ Login failed. Please try again.");
     }
   };
@@ -94,9 +101,9 @@ const Login = () => {
 
         <p className="text-gray-400 text-xs mt-5">
           Don’t have an account?{" "}
-          <a href="/register" className="text-cyan-400 hover:underline">
+          <Link to="/register" className="text-cyan-400 hover:underline">
             Register
-          </a>
+          </Link>
         </p>
       </motion.div>
     </section>
