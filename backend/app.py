@@ -21,36 +21,41 @@ else:
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
 
-# --- Allowed CORS Origins ---
+# ---------------- CORS Configuration ----------------
 ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "https://rail-mate-frontend.vercel.app",
-    "https://rail-mate-frontend-4kb9zahza-pinumalla-sai-tejas-projects.vercel.app"
+    "https://rail-mate-frontend.vercel.app",  # Production
 ]
 
-# --- Enable CORS ---
+# Enable wildcard **for all** preview deployments
 CORS(
     app,
     supports_credentials=True,
-    origins=ALLOWED_ORIGINS,
+    origins=["*"],  # allow all origins initially
     allow_headers=["Content-Type", "Authorization"],
-    methods=["GET", "POST", "OPTIONS"]
+    methods=["GET", "POST", "OPTIONS"],
 )
 
-# --- Manual OPTIONS handler ---
 @app.before_request
 def handle_preflight():
     if request.method == "OPTIONS":
         response = make_response()
         origin = request.headers.get("Origin", "")
-        if origin in ALLOWED_ORIGINS:
+
+        # Allow only Vercel and localhost
+        if (
+            origin.startswith("https://rail-mate-frontend")
+            or origin.startswith("https://*.vercel.app")
+            or origin == "http://localhost:5173"
+        ):
             response.headers["Access-Control-Allow-Origin"] = origin
+
         response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
         response.headers["Access-Control-Allow-Credentials"] = "true"
         return response, 200
 
-# --- Try Database Connection ---
+# ---------------- Try MongoDB Connection ----------------
 def try_connect_mongo():
     try:
         from pymongo import MongoClient
@@ -65,7 +70,7 @@ def try_connect_mongo():
 
 client = try_connect_mongo()
 
-# --- ROUTES ---
+# ---------------- ROUTES ----------------
 from routes.auth_routes import auth_bp
 from routes.trains_routes import trains_bp
 from routes.booking import booking_bp
@@ -83,8 +88,14 @@ app.register_blueprint(history_bp)
 @app.route("/")
 def home():
     return jsonify({
-        "status": "✅ RailMate API Active",
-        "message": "Welcome to RailMate Cloud API"
+        "status": "🚀 RailMate API Active",
+        "message": "Welcome to RailMate Cloud API",
+        "available_routes": [
+            "/auth/login",
+            "/auth/register",
+            "/trains",
+            "/book_ticket",
+        ]
     })
 
 if __name__ == "__main__":
