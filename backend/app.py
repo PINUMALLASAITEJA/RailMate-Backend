@@ -1,6 +1,6 @@
 import os
 import logging
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from database.db_connection import db
 
@@ -8,54 +8,42 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 logger = logging.getLogger(__name__)
 logger.info("=== Starting RailMate Backend ===")
 
-# --- Load Environment Variables ---
 MONGO_URI = os.environ.get("MONGO_URI")
 JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "railmate_secret_key")
 
 if not MONGO_URI:
     logger.error("❌ MONGO_URI missing in environment.")
 else:
-    logger.info("✅ MONGO_URI loaded (hidden for security).")
+    logger.info("✅ MONGO_URI loaded.")
 
-# --- Initialize Flask ---
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
 
-# ---------------- CORS Configuration ----------------
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "https://rail-mate-frontend.vercel.app",  # Production
-]
-
-# Enable wildcard **for all** preview deployments
+# Allow dynamic origins
 CORS(
     app,
     supports_credentials=True,
-    origins=["*"],  # allow all origins initially
+    resources={r"/*": {"origins": "*"}},
     allow_headers=["Content-Type", "Authorization"],
-    methods=["GET", "POST", "OPTIONS"],
+    methods=["GET", "POST", "OPTIONS"]
 )
 
-@app.before_request
-def handle_preflight():
-    if request.method == "OPTIONS":
-        response = make_response()
-        origin = request.headers.get("Origin", "")
+@app.after_request
+def apply_cors_headers(response):
+    origin = request.headers.get("Origin", "")
+    if origin and (
+        origin.startswith("https://rail-mate-frontend")
+        or origin.startswith("http://localhost")
+        or origin.endswith("vercel.app")
+    ):
+        response.headers["Access-Control-Allow-Origin"] = origin
 
-        # Allow only Vercel and localhost
-        if (
-            origin.startswith("https://rail-mate-frontend")
-            or origin.startswith("https://*.vercel.app")
-            or origin == "http://localhost:5173"
-        ):
-            response.headers["Access-Control-Allow-Origin"] = origin
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    return response
 
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-        response.headers["Access-Control-Allow-Credentials"] = "true"
-        return response, 200
-
-# ---------------- Try MongoDB Connection ----------------
+# ---- MongoDB connect ----
 def try_connect_mongo():
     try:
         from pymongo import MongoClient
@@ -70,7 +58,7 @@ def try_connect_mongo():
 
 client = try_connect_mongo()
 
-# ---------------- ROUTES ----------------
+# ---- Routes ----
 from routes.auth_routes import auth_bp
 from routes.trains_routes import trains_bp
 from routes.booking import booking_bp
@@ -88,16 +76,9 @@ app.register_blueprint(history_bp)
 @app.route("/")
 def home():
     return jsonify({
-        "status": "🚀 RailMate API Active",
-        "message": "Welcome to RailMate Cloud API",
-        "available_routes": [
-            "/auth/login",
-            "/auth/register",
-            "/trains",
-            "/book_ticket",
-        ]
+        "status": "🚆 RailMate API Active",
+        "message": "Backend Running"
     })
 
 if __name__ == "__main__":
-    logger.info("🚀 Running locally at http://0.0.0.0:5000")
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
