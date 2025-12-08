@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { loginUser } from "../api/railmateAPI";
 import { useNavigate, Link } from "react-router-dom";
@@ -7,14 +7,6 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-
-  // 🚀 Redirect if token already exists
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/book");  // Go to booking page directly
-    }
-  }, [navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,17 +18,20 @@ const Login = () => {
       const data = await loginUser(formData);
 
       if (data.token) {
-        // Save JWT & username to localStorage
-        localStorage.setItem("token", data.token);
-        localStorage.setItem(
+        // Save token
+        sessionStorage.setItem("token", data.token);
+        sessionStorage.setItem(
           "username",
           data.username || formData.email.split("@")[0]
         );
 
+        // Notify navbar to update username
+        window.dispatchEvent(new Event("login"));
+
         setMessage("✅ Login Successful!");
 
         setTimeout(() => {
-          navigate("/book"); // Redirect to booking page
+          navigate("/home"); // Redirect after login
         }, 500);
       } else {
         setMessage("❌ Invalid Credentials");
@@ -96,7 +91,9 @@ const Login = () => {
         </form>
 
         {message && (
-          <p className="text-cyan-300 text-sm mt-3 transition-all">{message}</p>
+          <p className="text-cyan-300 text-sm mt-3 transition-all">
+            {message}
+          </p>
         )}
 
         <p className="text-gray-400 text-xs mt-5">
