@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -10,42 +10,33 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import "./styles/Global.css";
 
-// ✅ Wrapper for handling redirect logic on page load
-const ProtectedApp = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const username = localStorage.getItem("username");
-
-    // If no user -> go to login
-    if (!token || !username) {
-      navigate("/login");
-    }
-  }, [navigate]);
-
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <main className="flex-grow">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/book" element={<Booking />} />
-          <Route path="/myjourneys" element={<MyJourneys />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
-  );
+// Protect individual pages instead of wrapping whole app
+const PrivateRoute = ({ children }) => {
+  const token = sessionStorage.getItem("token");
+  return token ? children : <Navigate to="/login" replace />;
 };
 
 const App = () => {
   return (
     <Router>
-      <ProtectedApp />
+      <div className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+
+            {/* Protected Routes */}
+            <Route path="/book" element={<PrivateRoute><Booking /></PrivateRoute>} />
+            <Route path="/myjourneys" element={<PrivateRoute><MyJourneys /></PrivateRoute>} />
+            <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+
+            {/* Auth Pages */}
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </Router>
   );
 };
