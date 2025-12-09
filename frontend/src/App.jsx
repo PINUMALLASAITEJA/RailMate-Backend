@@ -12,7 +12,7 @@ import "./styles/Global.css";
 
 // Protected Route wrapper
 const PrivateRoute = ({ children }) => {
-  const token = sessionStorage.getItem("token");
+  const token = localStorage.getItem("token"); // <-- FIXED (was sessionStorage)
   return token ? children : <Navigate to="/login" replace />;
 };
 
