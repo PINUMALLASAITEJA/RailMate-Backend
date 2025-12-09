@@ -1,11 +1,11 @@
 // src/api/railmateAPI.js
 
-// 🌍 Normalize backend URL (remove trailing slash)
+// Normalize backend URL
 const RAW_URL =
   import.meta.env.VITE_API_URL ||
   "https://rail-mate-backend.vercel.app";
 
-const API_URL = RAW_URL.replace(/\/+$/, ""); // remove trailing slashes
+export const API_URL = RAW_URL.replace(/\/+$/, "");
 
 console.log("🔗 RailMate API:", API_URL);
 
@@ -14,11 +14,12 @@ export const getTrains = async () => {
   const res = await fetch(`${API_URL}/trains`, {
     credentials: "include",
   });
+
   if (!res.ok) throw new Error("Failed to fetch trains");
   return await res.json();
 };
 
-// 🎫 Book ticket
+// 🎫 Book Ticket
 export const bookTicket = async (data) => {
   const res = await fetch(`${API_URL}/book_ticket`, {
     method: "POST",
@@ -26,12 +27,13 @@ export const bookTicket = async (data) => {
     credentials: "include",
     body: JSON.stringify(data),
   });
+
   if (!res.ok) throw new Error("Booking failed");
   return await res.json();
 };
 
-// 🧾 Register User
-export async function registerUser(userData) {
+// 🧾 Register
+export const registerUser = async (userData) => {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -45,10 +47,10 @@ export async function registerUser(userData) {
   }
 
   return await res.json();
-}
+};
 
-// 🔑 Login User
-export async function loginUser(credentials) {
+// 🔑 Login
+export const loginUser = async (credentials) => {
   const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -62,18 +64,17 @@ export async function loginUser(credentials) {
   }
 
   return await res.json();
-}
+};
 
-// 👤 Fetch Profile
-export async function getProfile() {
-  const token = localStorage.getItem("token");
+// 👤 Profile
+export const getProfile = async () => {
+  const token = sessionStorage.getItem("token"); // FIXED
   if (!token) throw new Error("No token found");
 
   const res = await fetch(`${API_URL}/auth/profile`, {
     method: "GET",
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      "Authorization": `Bearer ${token}`,
     },
     credentials: "include",
   });
@@ -84,4 +85,4 @@ export async function getProfile() {
   }
 
   return await res.json();
-}
+};
