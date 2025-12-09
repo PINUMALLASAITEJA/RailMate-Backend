@@ -6,7 +6,6 @@ from datetime import datetime, timedelta
 from flask import current_app
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
-
 users_collection = db["users"]
 
 # REGISTER
@@ -34,7 +33,6 @@ def register():
     }
 
     users_collection.insert_one(new_user)
-
     return jsonify({"message": "User registered successfully!"}), 201
 
 
@@ -47,7 +45,7 @@ def login():
 
     user = users_collection.find_one({"email": email})
     if not user:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"error": "User not found, please register"}), 404
 
     if not check_password_hash(user["password"], password):
         return jsonify({"error": "Incorrect password"}), 401
