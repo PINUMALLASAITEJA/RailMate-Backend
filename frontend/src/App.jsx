@@ -10,9 +10,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import "./styles/Global.css";
 
-// Protected Route wrapper
 const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem("token"); // <-- FIXED (was sessionStorage)
+  const token = sessionStorage.getItem("token");
   return token ? children : <Navigate to="/login" replace />;
 };
 
@@ -23,22 +22,17 @@ const App = () => {
         <Navbar />
         <main className="flex-grow">
           <Routes>
-            {/* Default route → Login */}
             <Route path="/" element={<Navigate to="/login" replace />} />
 
-            {/* Auth routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
-            {/* Protected Routes */}
             <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
             <Route path="/book" element={<PrivateRoute><Booking /></PrivateRoute>} />
             <Route path="/myjourneys" element={<PrivateRoute><MyJourneys /></PrivateRoute>} />
             <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
 
-            {/* Unknown routes */}
-            <Route path="/" element={<Navigate to="/home" replace />} />
-
+            <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </main>
         <Footer />
