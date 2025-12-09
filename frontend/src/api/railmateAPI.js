@@ -1,68 +1,84 @@
 // src/api/railmateAPI.js
 
+// Normalize backend URL
 const RAW_URL =
   import.meta.env.VITE_API_URL ||
   "https://rail-mate-backend.vercel.app";
 
-const API_URL = RAW_URL.replace(/\/+$/, ""); 
+const API_URL = RAW_URL.replace(/\/+$/, ""); // remove trailing slashes
 
 console.log("🔗 RailMate API:", API_URL);
 
-// REGISTER
+// Fetch Trains
+export const getTrains = async () => {
+  const res = await fetch(`${API_URL}/trains`, {
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Failed to fetch trains");
+  return await res.json();
+};
+
+// Book Ticket
+export const bookTicket = async (data) => {
+  const res = await fetch(`${API_URL}/book_ticket`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: "Booking failed" }));
+    throw new Error(err.error);
+  }
+  return await res.json();
+};
+
+// Register
 export async function registerUser(userData) {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userData),
+    body: JSON.stringify(userData)
   });
 
-  const data = await res.json().catch(() => null);
-
   if (!res.ok) {
-    throw new Error(data?.error || "Registration failed");
+    const err = await res.json().catch(() => ({ error: "Registration failed" }));
+    throw new Error(err.error);
   }
-  return data;
+
+  return await res.json();
 }
 
-// LOGIN
+// Login
 export async function loginUser(credentials) {
   const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(credentials),
+    body: JSON.stringify(credentials)
   });
 
-  const data = await res.json().catch(() => null);
-
   if (!res.ok) {
-    throw new Error(data?.error || "Login failed");
+    const err = await res.json().catch(() => ({ error: "Login failed" }));
+    throw new Error(err.error);
   }
-  return data;
+
+  return await res.json();
 }
 
-// PROFILE
+// Get Profile
 export async function getProfile() {
-  const token = sessionStorage.getItem("token");
-  if (!token) throw new Error("No token found");
+  const token = localStorage.getItem("token");
+  if (!token) throw new Error("No token stored");
 
   const res = await fetch(`${API_URL}/auth/profile`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: { Authorization: `Bearer ${token}` },
   });
 
-  const data = await res.json().catch(() => null);
-
   if (!res.ok) {
-    throw new Error(data?.error || "Profile fetch failed");
+    const err = await res.json().catch(() => ({ error: "Profile error" }));
+    throw new Error(err.error);
   }
 
-  return data;
+  return await res.json();
 }
-
-// TRAINS
-export const getTrains = async () => {
-  const res = await fetch(`${API_URL}/trains`);
-  const data = await res.json();
-  return data;
-};
