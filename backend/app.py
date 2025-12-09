@@ -8,49 +8,37 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 logger = logging.getLogger(__name__)
 logger.info("=== Starting RailMate Backend ===")
 
-# ---- Environment variables ----
 MONGO_URI = os.environ.get("MONGO_URI")
 JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "railmate_secret_key")
-
-if not MONGO_URI:
-    logger.error("❌ MONGO_URI missing in environment.")
-else:
-    logger.info("✅ MONGO_URI loaded")
 
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
 
-# ---- Allowed origins ----
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "https://rail-mate-frontend.vercel.app",
-    "https://rail-mate-frontend*.vercel.app",
-    "https://*.pinumalla-sai-tejas-projects.vercel.app",
-]
-
-# ---- CORS Configuration ----
+# ---- Enable CORS without origin restriction (handled manually later) ----
 CORS(
     app,
     supports_credentials=True,
-    origins=ALLOWED_ORIGINS,
+    resources={r"/*": {"origins": "*"}},
     allow_headers=["Content-Type", "Authorization"],
     methods=["GET", "POST", "OPTIONS"]
 )
 
-@app.before_request
-def handle_preflight():
-    """Fix OPTIONS preflight for Vercel requests"""
-    if request.method == "OPTIONS":
-        origin = request.headers.get("Origin")
-        response = make_response()
-        if origin in ALLOWED_ORIGINS or (
-            origin and ("vercel.app" in origin or "localhost" in origin)
-        ):
-            response.headers["Access-Control-Allow-Origin"] = origin
-        response.headers["Access-Control-Allow-Credentials"] = "true"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
-        return response, 200
+@app.after_request
+def add_cors_headers(response):
+    origin = request.headers.get("Origin", "")
+
+    # Allow all vercel preview domains & localhost
+    if (
+        "vercel.app" in origin
+        or "localhost" in origin
+        or "127.0.0.1" in origin
+    ):
+        response.headers["Access-Control-Allow-Origin"] = origin
+
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    return response
 
 # ---- DB Connection ----
 def try_connect_mongo():
@@ -90,5 +78,5 @@ def home():
     })
 
 if __name__ == "__main__":
-    logger.info("🚀 Running locally at http://0.0.0.0:5000")
+    logger.info("🚀 Running at http://0.0.0.0:5000")
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
