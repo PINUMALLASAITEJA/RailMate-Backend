@@ -37,7 +37,8 @@ const App = () => {
             <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
 
             {/* Unknown routes */}
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<Navigate to="/home" replace />} />
+
           </Routes>
         </main>
         <Footer />

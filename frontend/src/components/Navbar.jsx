@@ -5,96 +5,47 @@ import "./Navbar.css";
 const Navbar = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    // ✅ Initial check
-    const storedUser = sessionStorage.getItem("username");
+    const storedUser = localStorage.getItem("username");
     if (storedUser) setUsername(storedUser);
 
-    // ✅ React instantly when user logs in or logs out
-    const handleLoginChange = () => {
-      const updatedUser = sessionStorage.getItem("username");
+    const handleStorageChange = () => {
+      const updatedUser = localStorage.getItem("username");
       setUsername(updatedUser || "");
     };
 
-    window.addEventListener("login", handleLoginChange);
-    window.addEventListener("storage", handleLoginChange);
-
-    return () => {
-      window.removeEventListener("login", handleLoginChange);
-      window.removeEventListener("storage", handleLoginChange);
-    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const handleLogout = () => {
-    sessionStorage.clear();
+    localStorage.clear();
     setUsername("");
-    setMenuOpen(false);
     navigate("/login");
   };
 
   return (
     <nav className="navbar">
-      <div className="logo" onClick={() => navigate("/")}>
+      <div className="logo" onClick={() => navigate("/home")}>
         🚆 <span>RailMate</span>
       </div>
 
       <ul className="nav-links">
-        <li>
-          <NavLink
-            to="/"
-            className={({ isActive }) => (isActive ? "active-link" : "")}
-          >
-            Home
-          </NavLink>
-        </li>
+        <li><NavLink to="/home" className={({ isActive }) => (isActive ? "active-link" : "")}>Home</NavLink></li>
+        <li><NavLink to="/book" className={({ isActive }) => (isActive ? "active-link" : "")}>Book Tickets</NavLink></li>
+        <li><NavLink to="/myjourneys" className={({ isActive }) => (isActive ? "active-link" : "")}>My Journeys</NavLink></li>
 
-        <li>
-          <NavLink
-            to="/book"
-            className={({ isActive }) => (isActive ? "active-link" : "")}
-          >
-            Book Tickets
-          </NavLink>
-        </li>
-
-        <li>
-          <NavLink
-            to="/myjourneys"
-            className={({ isActive }) => (isActive ? "active-link" : "")}
-          >
-            My Journeys
-          </NavLink>
-        </li>
-
-        {/* 👤 Profile Section */}
         {username ? (
           <li className="profile-dropdown">
-            <button
-              className="profile-btn"
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
+            <button onClick={() => navigate("/profile")} className="profile-btn">
               👤 {username}
             </button>
-
-            {menuOpen && (
-              <div className="dropdown-menu">
-                <button onClick={() => navigate("/profile")}>
-                  View Profile
-                </button>
-                <button onClick={handleLogout}>Logout</button>
-              </div>
-            )}
+            <button onClick={handleLogout} className="profile-btn">Logout</button>
           </li>
         ) : (
           <li>
-            <button
-              className="btn-glow text-sm"
-              onClick={() => navigate("/login")}
-            >
-              Login
-            </button>
+            <button className="btn-glow" onClick={() => navigate("/login")}>Login</button>
           </li>
         )}
       </ul>
