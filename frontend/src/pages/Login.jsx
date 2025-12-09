@@ -18,24 +18,22 @@ const Login = () => {
       const data = await loginUser(formData);
 
       if (data.token) {
-        // Store token & user info in localStorage
-        localStorage.setItem("token", data.token);
-        localStorage.setItem(
+        // Save to sessionStorage (not localStorage)
+        sessionStorage.setItem("token", data.token);
+        sessionStorage.setItem(
           "username",
           data.username || formData.email.split("@")[0]
         );
 
-        // Notify navbar to update display
+        // Notify navbar to update UI
         window.dispatchEvent(new Event("storage"));
 
         setMessage("✅ Login Successful!");
 
         setTimeout(() => navigate("/home"), 500);
-      } else {
-        setMessage("❌ Invalid Credentials");
       }
-    } catch {
-      setMessage("⚠️ Login failed. Please try again.");
+    } catch (error) {
+      setMessage(`❌ ${error.message}`);
     }
   };
 
