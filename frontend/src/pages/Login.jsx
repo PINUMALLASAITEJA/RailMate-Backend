@@ -18,25 +18,23 @@ const Login = () => {
       const data = await loginUser(formData);
 
       if (data.token) {
-        // Save token
-        sessionStorage.setItem("token", data.token);
-        sessionStorage.setItem(
+        // Store token & user info in localStorage
+        localStorage.setItem("token", data.token);
+        localStorage.setItem(
           "username",
           data.username || formData.email.split("@")[0]
         );
 
-        // Notify navbar to update username
-        window.dispatchEvent(new Event("login"));
+        // Notify navbar to update display
+        window.dispatchEvent(new Event("storage"));
 
         setMessage("✅ Login Successful!");
 
-        setTimeout(() => {
-          navigate("/home"); // Redirect after login
-        }, 500);
+        setTimeout(() => navigate("/home"), 500);
       } else {
         setMessage("❌ Invalid Credentials");
       }
-    } catch (error) {
+    } catch {
       setMessage("⚠️ Login failed. Please try again.");
     }
   };
@@ -64,7 +62,7 @@ const Login = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full bg-white/10 border border-cyan-400/40 rounded-md p-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="input"
             />
           </div>
 
@@ -77,23 +75,21 @@ const Login = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full bg-white/10 border border-cyan-400/40 rounded-md p-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="input"
             />
           </div>
 
           <motion.button
             whileHover={{ scale: 1.05 }}
             type="submit"
-            className="w-full bg-cyan-500 hover:bg-cyan-600 py-2 rounded-md font-semibold text-white transition-all text-sm"
+            className="btn-glow w-full"
           >
             Login
           </motion.button>
         </form>
 
         {message && (
-          <p className="text-cyan-300 text-sm mt-3 transition-all">
-            {message}
-          </p>
+          <p className="text-cyan-300 text-sm mt-3 transition-all">{message}</p>
         )}
 
         <p className="text-gray-400 text-xs mt-5">
