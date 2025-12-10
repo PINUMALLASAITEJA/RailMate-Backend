@@ -1,29 +1,34 @@
 // src/api/railmateAPI.js
 
-// Normalize backend URL
-const RAW_URL =
-  import.meta.env.VITE_API_URL ||
-  "https://rail-mate-backend.vercel.app";
+// 🛑 Hard-protect API URL during production builds
+let API_URL = import.meta.env.VITE_API_URL;
 
-const API_URL = RAW_URL.replace(/\/+$/, ""); // remove trailing slashes
+// If VITE_API_URL is missing or empty → force correct backend
+if (!API_URL || API_URL.trim() === "" || API_URL.includes("localhost")) {
+  API_URL = "https://rail-mate-backend.vercel.app";
+}
+
+// Remove trailing slash if exists
+API_URL = API_URL.replace(/\/+$/, "");
 
 console.log("🔗 RailMate API:", API_URL);
 
-// Fetch Trains
+// -------------------------------
+// 🚆 Fetch Trains
+// -------------------------------
 export const getTrains = async () => {
-  const res = await fetch(`${API_URL}/trains`, {
-    credentials: "include",
-  });
+  const res = await fetch(`${API_URL}/trains`);
   if (!res.ok) throw new Error("Failed to fetch trains");
   return await res.json();
 };
 
-// Book Ticket
+// -------------------------------
+// 🎫 Book Ticket
+// -------------------------------
 export const bookTicket = async (data) => {
   const res = await fetch(`${API_URL}/book_ticket`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    credentials: "include",
     body: JSON.stringify(data),
   });
 
@@ -31,15 +36,18 @@ export const bookTicket = async (data) => {
     const err = await res.json().catch(() => ({ error: "Booking failed" }));
     throw new Error(err.error);
   }
+
   return await res.json();
 };
 
-// Register
+// -------------------------------
+// 🧾 Register User
+// -------------------------------
 export async function registerUser(userData) {
   const res = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userData)
+    body: JSON.stringify(userData),
   });
 
   if (!res.ok) {
@@ -50,12 +58,14 @@ export async function registerUser(userData) {
   return await res.json();
 }
 
-// Login
+// -------------------------------
+// 🔑 Login User
+// -------------------------------
 export async function loginUser(credentials) {
   const res = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(credentials)
+    body: JSON.stringify(credentials),
   });
 
   if (!res.ok) {
@@ -66,7 +76,9 @@ export async function loginUser(credentials) {
   return await res.json();
 }
 
-// Get Profile
+// -------------------------------
+// 👤 Fetch Profile
+// -------------------------------
 export async function getProfile() {
   const token = localStorage.getItem("token");
   if (!token) throw new Error("No token stored");
