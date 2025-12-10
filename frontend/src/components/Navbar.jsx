@@ -5,19 +5,19 @@ const Navbar = () => {
   const [username, setUsername] = useState(null);
   const navigate = useNavigate();
 
-  // Load username on page load
+  // Load username when page loads
   useEffect(() => {
     setUsername(localStorage.getItem("username") || null);
   }, []);
 
-  // Update navbar when login/logout happens
+  // Automatically update navbar whenever login/logout happens
   useEffect(() => {
     const updateUser = () => {
       setUsername(localStorage.getItem("username") || null);
     };
 
     window.addEventListener("storage", updateUser);
-    window.addEventListener("login", updateUser);   // optional custom event
+    window.addEventListener("login", updateUser);
 
     return () => {
       window.removeEventListener("storage", updateUser);
@@ -28,8 +28,11 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
-
     setUsername(null);
+
+    // 🔥 Trigger UI update
+    window.dispatchEvent(new Event("storage"));
+
     navigate("/login");
   };
 
@@ -48,7 +51,7 @@ const Navbar = () => {
         <Link to="/book" className="hover:text-cyan-400">Book</Link>
         <Link to="/myjourneys" className="hover:text-cyan-400">My Journeys</Link>
 
-        {/* 🔥 If logged in → show username + profile + logout */}
+        {/* 🔥 Logged-in UI */}
         {username ? (
           <div className="flex items-center gap-4">
 
@@ -68,7 +71,7 @@ const Navbar = () => {
 
           </div>
         ) : (
-          /* 🔥 If not logged in → show Login button */
+          // 🔥 Not logged in → show Login button
           <Link
             to="/login"
             className="px-3 py-1 rounded-md bg-cyan-500 hover:bg-cyan-600 transition"
