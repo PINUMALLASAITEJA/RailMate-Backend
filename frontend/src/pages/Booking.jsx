@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { getTrains, bookTicket } from "../api/railmateAPI";
+import { getTrains } from "../api/railmateAPI";   // ONLY getTrains is imported now
 import Toast from "../components/Toast";
 
 const Booking = () => {
@@ -14,19 +14,35 @@ const Booking = () => {
   });
   const [toast, setToast] = useState(null);
 
+  // Fetch trains
   useEffect(() => {
     (async () => {
       try {
         const data = await getTrains();
-        console.log("Fetched trains:", data); // debug
         setTrains(data);
-      } catch (err) {
-        setToast({ message: "❌ Failed to load trains", type: "error" });
+      } catch {
+        setToast({ message: "❌ Failed to fetch trains", type: "error" });
       } finally {
         setLoading(false);
       }
     })();
   }, []);
+
+  // Local bookTicket function since API file doesn't export it
+  const bookTicket = async (payload) => {
+    const API_URL = import.meta.env.VITE_API_URL.replace(/\/+$/, "");
+    const res = await fetch(`${API_URL}/book_ticket`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: "Booking failed" }));
+      throw new Error(err.error);
+    }
+    return await res.json();
+  };
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -48,17 +64,25 @@ const Booking = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const booked_by = localStorage.getItem("username");
+
     try {
-      const booked_by = localStorage.getItem("username");
-      const res = await bookTicket({
+      await bookTicket({
         ...formData,
         booked_by,
         seats: formData.passengers.length,
       });
 
-      setToast({ message: "🎉 Ticket booked successfully!", type: "success" });
-    } catch {
-      setToast({ message: "❌ Booking failed. Try again.", type: "error" });
+      setToast({
+        message: "🎉 Ticket booked successfully!",
+        type: "success",
+      });
+    } catch (err) {
+      setToast({
+        message: "❌ Booking failed: " + err.message,
+        type: "error",
+      });
     }
   };
 
@@ -74,13 +98,13 @@ const Booking = () => {
           🎟️ Book Your Journey
         </h1>
 
-        {/* Train Dropdown */}
         {loading ? (
           <p className="text-gray-300 text-sm">⏳ Loading trains...</p>
         ) : trains.length === 0 ? (
-          <p className="text-red-400 text-sm">⚠️ No trains available yet.</p>
+          <p className="text-red-400 text-sm">⚠️ No trains available</p>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-3 text-left">
+            {/* Select Train */}
             <div>
               <label className="block text-gray-300 text-sm mb-1">Train</label>
               <select
@@ -93,13 +117,14 @@ const Booking = () => {
                 <option value="">Select Train</option>
                 {trains.map((t) => (
                   <option key={t.id} value={t.train_number}>
-                    {t.train_name} ({t.source} ➜ {t.destination}) — Seats: {t.available_seats}
+                    {t.train_name} ({t.source} ➜ {t.destination}) — Seats:{" "}
+                    {t.available_seats}
                   </option>
                 ))}
               </select>
             </div>
 
-            {/* Journey Date */}
+            {/* Date */}
             <div>
               <label className="block text-gray-300 text-sm mb-1">Date</label>
               <input
@@ -144,7 +169,7 @@ const Booking = () => {
               />
             </div>
 
-            {/* Passenger Fields */}
+            {/* Passenger Info */}
             {formData.passengers.map((p, i) => (
               <div key={i} className="flex flex-col gap-2 mt-2">
                 <input

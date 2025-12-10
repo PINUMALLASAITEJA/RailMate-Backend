@@ -12,28 +12,27 @@ console.log("🔗 RailMate API:", API_URL);
 // =========================
 // 🚆 Fetch Trains
 // =========================
-export const getTrains = async () => {
+export async function getTrains() {
   const res = await fetch(`${API_URL}/trains`);
   if (!res.ok) throw new Error("Failed to fetch trains");
   return res.json();
-};
+}
 
 // =========================
 // 🎫 Book Ticket
 // =========================
-export const bookTicket = async (data) => {
+export async function bookTicket(data) {
   const res = await fetch(`${API_URL}/book_ticket`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: "Booking failed" }));
-    throw new Error(err.error);
-  }
-  return res.json();
-};
+  const json = await res.json().catch(() => ({ error: "Booking failed" }));
+
+  if (!res.ok) throw new Error(json.error);
+  return json;
+}
 
 // =========================
 // 🧾 Register user
