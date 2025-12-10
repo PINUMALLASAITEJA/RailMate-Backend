@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { registerUser } from "../api/railmateAPI";
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -7,12 +9,14 @@ const Register = () => {
     email: "",
     password: "",
   });
+
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // ✅ Restrict username to lowercase letters, numbers, underscore only
+    // Restrict username characters
     if (name === "username") {
       const regex = /^[a-z0-9_]*$/;
       if (!regex.test(value)) return;
@@ -23,24 +27,16 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setMessage("");
+
     try {
-      const res = await fetch("http://127.0.0.1:5000/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const res = await registerUser(formData);
 
-      const data = await res.json();
+      setMessage("✅ Registration successful! Redirecting to login...");
 
-      if (res.ok) {
-        // ✅ Save username for session and success message
-        sessionStorage.setItem("username", formData.username);
-        setMessage("✅ Registered successfully! You can now log in.");
-      } else {
-        setMessage("❌ " + (data.error || "Registration failed."));
-      }
-    } catch {
-      setMessage("⚠️ Registration failed. Try again later.");
+      setTimeout(() => navigate("/login"), 1500);
+    } catch (error) {
+      setMessage("❌ " + error.message);
     }
   };
 
@@ -62,9 +58,7 @@ const Register = () => {
         <form onSubmit={handleRegister} className="space-y-3 text-left">
           {/* Username */}
           <div>
-            <label className="block text-gray-300 text-sm mb-1">
-              Username
-            </label>
+            <label className="block text-gray-300 text-sm mb-1">Username</label>
             <input
               type="text"
               name="username"
@@ -74,7 +68,7 @@ const Register = () => {
               required
               minLength="3"
               maxLength="15"
-              className="w-full bg-white/10 border border-cyan-400/40 rounded-md p-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="input"
             />
           </div>
 
@@ -88,15 +82,13 @@ const Register = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full bg-white/10 border border-cyan-400/40 rounded-md p-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="input"
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-gray-300 text-sm mb-1">
-              Password
-            </label>
+            <label className="block text-gray-300 text-sm mb-1">Password</label>
             <input
               type="password"
               name="password"
@@ -105,7 +97,7 @@ const Register = () => {
               onChange={handleChange}
               required
               minLength="6"
-              className="w-full bg-white/10 border border-cyan-400/40 rounded-md p-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="input"
             />
           </div>
 
@@ -113,7 +105,7 @@ const Register = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             type="submit"
-            className="w-full btn-glow py-2 text-sm font-semibold"
+            className="btn-glow w-full py-2 text-sm font-semibold"
           >
             Register
           </motion.button>
@@ -127,9 +119,9 @@ const Register = () => {
 
         <p className="text-gray-400 text-xs mt-5">
           Already have an account?{" "}
-          <a href="/login" className="text-cyan-400 hover:underline">
+          <Link to="/login" className="text-cyan-400 hover:underline">
             Login
-          </a>
+          </Link>
         </p>
       </motion.div>
     </section>
