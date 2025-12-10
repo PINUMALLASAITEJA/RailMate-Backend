@@ -117,8 +117,7 @@ const Booking = () => {
                 <option value="">Select Train</option>
                 {trains.map((t) => (
                   <option key={t.id} value={t.train_number}>
-                    {t.train_name} ({t.source} ➜ {t.destination}) — Seats:{" "}
-                    {t.available_seats}
+                    {t.train_name} ({t.source} ➜ {t.destination})
                   </option>
                 ))}
               </select>
