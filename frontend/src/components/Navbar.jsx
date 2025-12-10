@@ -1,54 +1,82 @@
-import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import "./Navbar.css";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const [username, setUsername] = useState(null);
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
 
+  // Load username on page load
   useEffect(() => {
-    const storedUser = localStorage.getItem("username");
-    if (storedUser) setUsername(storedUser);
+    setUsername(localStorage.getItem("username") || null);
+  }, []);
 
-    const handleStorageChange = () => {
-      const updatedUser = localStorage.getItem("username");
-      setUsername(updatedUser || "");
+  // Update navbar when login/logout happens
+  useEffect(() => {
+    const updateUser = () => {
+      setUsername(localStorage.getItem("username") || null);
     };
 
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    window.addEventListener("storage", updateUser);
+    window.addEventListener("login", updateUser);   // optional custom event
+
+    return () => {
+      window.removeEventListener("storage", updateUser);
+      window.removeEventListener("login", updateUser);
+    };
   }, []);
 
   const handleLogout = () => {
-    localStorage.clear();
-    setUsername("");
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+
+    setUsername(null);
     navigate("/login");
   };
 
   return (
-    <nav className="navbar">
-      <div className="logo" onClick={() => navigate("/home")}>
-        🚆 <span>RailMate</span>
-      </div>
+    <nav className="w-full bg-[#0b1628]/80 backdrop-blur-lg text-white px-6 py-3 flex justify-between items-center shadow-lg">
+      
+      {/* Logo */}
+      <Link to="/home" className="text-xl font-semibold text-cyan-400 tracking-wide">
+        🚆 RailMate
+      </Link>
 
-      <ul className="nav-links">
-        <li><NavLink to="/home" className={({ isActive }) => (isActive ? "active-link" : "")}>Home</NavLink></li>
-        <li><NavLink to="/book" className={({ isActive }) => (isActive ? "active-link" : "")}>Book Tickets</NavLink></li>
-        <li><NavLink to="/myjourneys" className={({ isActive }) => (isActive ? "active-link" : "")}>My Journeys</NavLink></li>
+      {/* Navigation Options */}
+      <div className="flex items-center gap-6 text-sm">
 
+        <Link to="/home" className="hover:text-cyan-400">Home</Link>
+        <Link to="/book" className="hover:text-cyan-400">Book</Link>
+        <Link to="/myjourneys" className="hover:text-cyan-400">My Journeys</Link>
+
+        {/* 🔥 If logged in → show username + profile + logout */}
         {username ? (
-          <li className="profile-dropdown">
-            <button onClick={() => navigate("/profile")} className="profile-btn">
-              👤 {username}
+          <div className="flex items-center gap-4">
+
+            <Link
+              to="/profile"
+              className="px-3 py-1 rounded-md bg-cyan-500/20 border border-cyan-400/30 hover:bg-cyan-500/30"
+            >
+              {username}
+            </Link>
+
+            <button
+              onClick={handleLogout}
+              className="px-3 py-1 rounded-md bg-red-500/20 border border-red-400/30 hover:bg-red-500/30"
+            >
+              Logout
             </button>
-            <button onClick={handleLogout} className="profile-btn">Logout</button>
-          </li>
+
+          </div>
         ) : (
-          <li>
-            <button className="btn-glow" onClick={() => navigate("/login")}>Login</button>
-          </li>
+          /* 🔥 If not logged in → show Login button */
+          <Link
+            to="/login"
+            className="px-3 py-1 rounded-md bg-cyan-500 hover:bg-cyan-600 transition"
+          >
+            Login
+          </Link>
         )}
-      </ul>
+      </div>
     </nav>
   );
 };
