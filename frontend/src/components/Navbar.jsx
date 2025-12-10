@@ -5,34 +5,31 @@ const Navbar = () => {
   const [username, setUsername] = useState(null);
   const navigate = useNavigate();
 
-  // Load username when page loads
+  // Load username first time
   useEffect(() => {
     setUsername(localStorage.getItem("username") || null);
   }, []);
 
-  // Automatically update navbar whenever login/logout happens
+  // Update on login/logout
   useEffect(() => {
     const updateUser = () => {
       setUsername(localStorage.getItem("username") || null);
     };
 
-    window.addEventListener("storage", updateUser);
     window.addEventListener("login", updateUser);
+    window.addEventListener("storage", updateUser);
 
     return () => {
-      window.removeEventListener("storage", updateUser);
       window.removeEventListener("login", updateUser);
+      window.removeEventListener("storage", updateUser);
     };
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+
     setUsername(null);
-
-    // 🔥 Trigger UI update
-    window.dispatchEvent(new Event("storage"));
-
     navigate("/login");
   };
 
@@ -44,14 +41,14 @@ const Navbar = () => {
         🚆 RailMate
       </Link>
 
-      {/* Navigation Options */}
+      {/* Menu */}
       <div className="flex items-center gap-6 text-sm">
-
+        
         <Link to="/home" className="hover:text-cyan-400">Home</Link>
         <Link to="/book" className="hover:text-cyan-400">Book</Link>
         <Link to="/myjourneys" className="hover:text-cyan-400">My Journeys</Link>
 
-        {/* 🔥 Logged-in UI */}
+        {/* Logged in → username + logout */}
         {username ? (
           <div className="flex items-center gap-4">
 
@@ -71,7 +68,7 @@ const Navbar = () => {
 
           </div>
         ) : (
-          // 🔥 Not logged in → show Login button
+          // Not logged in → show Login
           <Link
             to="/login"
             className="px-3 py-1 rounded-md bg-cyan-500 hover:bg-cyan-600 transition"

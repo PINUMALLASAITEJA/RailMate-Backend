@@ -14,26 +14,29 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
       const data = await loginUser(formData);
 
       if (data.token) {
-        // Save to sessionStorage (not localStorage)
-        sessionStorage.setItem("token", data.token);
-        sessionStorage.setItem(
+        // Store token & username
+        localStorage.setItem("token", data.token);
+        localStorage.setItem(
           "username",
           data.username || formData.email.split("@")[0]
         );
 
-        // Notify navbar to update UI
-        window.dispatchEvent(new Event("storage"));
+        // 🔥 Trigger navbar update immediately
+        window.dispatchEvent(new Event("login"));
 
         setMessage("✅ Login Successful!");
 
         setTimeout(() => navigate("/home"), 500);
+      } else {
+        setMessage("❌ Invalid Credentials");
       }
-    } catch (error) {
-      setMessage(`❌ ${error.message}`);
+    } catch (err) {
+      setMessage("⚠️ Login failed. Please try again.");
     }
   };
 
