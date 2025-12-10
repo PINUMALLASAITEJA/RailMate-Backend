@@ -18,25 +18,24 @@ const Login = () => {
     try {
       const data = await loginUser(formData);
 
-      if (data.token) {
-        // Store token & username
-        localStorage.setItem("token", data.token);
-        localStorage.setItem(
-          "username",
-          data.username || formData.email.split("@")[0]
-        );
+      // 🔥 Extract username safely
+      const username =
+        data.username ||
+        data.user?.username ||
+        formData.email.split("@")[0];
 
-        // 🔥 Trigger navbar update immediately
-        window.dispatchEvent(new Event("login"));
+      // 🔥 Store token + username
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("username", username);
 
-        setMessage("✅ Login Successful!");
+      // 🔥 Notify navbar
+      window.dispatchEvent(new Event("login"));
 
-        setTimeout(() => navigate("/home"), 500);
-      } else {
-        setMessage("❌ Invalid Credentials");
-      }
+      setMessage("✅ Login Successful!");
+
+      setTimeout(() => navigate("/home"), 500);
     } catch (err) {
-      setMessage("⚠️ Login failed. Please try again.");
+      setMessage("❌ " + (err.message || "Login failed"));
     }
   };
 
