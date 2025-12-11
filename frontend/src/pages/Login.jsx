@@ -14,14 +14,10 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
       const data = await loginUser(formData);
-
       const username =
-        data.username ||
-        data.user?.username ||
-        formData.email.split("@")[0];
+        data.username || data.user?.username || formData.email.split("@")[0];
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", username);
@@ -29,7 +25,6 @@ const Login = () => {
       window.dispatchEvent(new Event("login"));
 
       setMessage("✅ Login Successful!");
-
       setTimeout(() => navigate("/home"), 500);
     } catch (err) {
       setMessage("❌ " + (err.message || "Login failed"));
@@ -76,11 +71,9 @@ const Login = () => {
             />
           </div>
 
-          {/* FIXED BUTTON — no btn-glow */}
           <motion.button
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
-            type="submit"
             className="
               w-full py-2 rounded-md font-semibold text-white
               bg-cyan-500/30 border border-cyan-400/40
@@ -89,17 +82,18 @@ const Login = () => {
               hover:shadow-[0_0_12px_rgba(0,255,255,0.35)]
               transition-all text-sm backdrop-blur-md
             "
+            type="submit"
           >
             Login
           </motion.button>
         </form>
 
         {message && (
-          <p className="text-cyan-300 text-sm mt-3 transition-all">{message}</p>
+          <p className="text-cyan-300 text-sm mt-3">{message}</p>
         )}
 
         <p className="text-gray-400 text-xs mt-5">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <Link to="/register" className="text-cyan-400 hover:underline">
             Register
           </Link>
