@@ -132,3 +132,8 @@
   box-shadow: 0 0 8px rgba(0, 255, 255, 0.15) !important;
   transform: scale(1.03);
 }
+/* Hide dropdown by default (React controls visibility) */
+.dropdown-menu {
+  display: flex;
+}
+

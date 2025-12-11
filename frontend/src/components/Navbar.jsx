@@ -1,38 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Navbar.css";
 
 const Navbar = () => {
   const [username, setUsername] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const dropdownRef = useRef();
 
-  // Load username on route change
+  // Load username when route changes OR when login updates
   useEffect(() => {
     const storedUser = localStorage.getItem("username");
     setUsername(storedUser);
   }, [location.pathname]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   // Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     setUsername(null);
+    setDropdownOpen(false);
     navigate("/login");
   };
 
   return (
     <nav className="navbar">
       
-      {/* 🔹 Logo */}
+      {/* Logo */}
       <div className="logo" onClick={() => navigate("/home")}>
         🚆 <span>RailMate</span>
       </div>
 
-      {/* 🔹 Navigation Links */}
       <ul className="nav-links">
         <li>
-          <Link 
+          <Link
             to="/home"
             className={location.pathname === "/home" ? "active-link" : ""}
           >
@@ -41,7 +54,7 @@ const Navbar = () => {
         </li>
 
         <li>
-          <Link 
+          <Link
             to="/book"
             className={location.pathname === "/book" ? "active-link" : ""}
           >
@@ -50,7 +63,7 @@ const Navbar = () => {
         </li>
 
         <li>
-          <Link 
+          <Link
             to="/myjourneys"
             className={location.pathname === "/myjourneys" ? "active-link" : ""}
           >
@@ -58,25 +71,29 @@ const Navbar = () => {
           </Link>
         </li>
 
-        {/* 🔥 If logged in → username + dropdown */}
+        {/* If logged in → username button + dropdown */}
         {username ? (
-          <li className="profile-dropdown">
-
-            <button className="profile-btn">
+          <li className="profile-dropdown" ref={dropdownRef}>
+            
+            {/* Username Button */}
+            <button
+              className="profile-btn"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+            >
               {username}
             </button>
 
-            <div className="dropdown-menu">
-              <button onClick={() => navigate("/profile")}>
-                View Profile
-              </button>
-              <button onClick={handleLogout}>
-                Logout
-              </button>
-            </div>
+            {/* Dropdown (only visible when dropdownOpen = true) */}
+            {dropdownOpen && (
+              <div className="dropdown-menu">
+                <button onClick={() => navigate("/profile")}>
+                  View Profile
+                </button>
+                <button onClick={handleLogout}>Logout</button>
+              </div>
+            )}
           </li>
         ) : (
-          // 🔥 If NOT logged in → Login button
           <li>
             <Link to="/login" className="btn-glow">
               Login
