@@ -1,17 +1,44 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import "./Navbar.css";   // ✅ important — restores your styling
+import React, { useEffect, useState, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../styles/Navbar.css";
 
 const Navbar = () => {
   const [username, setUsername] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
-  const location = useLocation();
 
-  // 🔥 Always refresh username when route changes
+  // 🔹 Load username on load
   useEffect(() => {
-    const storedUser = localStorage.getItem("username");
-    setUsername(storedUser);
-  }, [location.pathname]);
+    setUsername(localStorage.getItem("username") || null);
+  }, []);
+
+  // 🔹 Listen for login/logout events
+  useEffect(() => {
+    const updateUser = () => {
+      setUsername(localStorage.getItem("username") || null);
+    };
+
+    window.addEventListener("storage", updateUser);
+    window.addEventListener("login", updateUser);
+
+    return () => {
+      window.removeEventListener("storage", updateUser);
+      window.removeEventListener("login", updateUser);
+    };
+  }, []);
+
+  // 🔹 Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -21,27 +48,52 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar"> {/* uses Navbar.css */}
-      <div className="logo" onClick={() => navigate("/home")}>
-        🚆 <span>RailMate</span>
-      </div>
+    <nav className="navbar">
+      {/* Logo */}
+      <Link to="/home" className="logo">
+        🚆 RailMate
+      </Link>
 
+      {/* NAV LINKS */}
       <ul className="nav-links">
-        <li><Link to="/home">Home</Link></li>
-        <li><Link to="/book">Book</Link></li>
-        <li><Link to="/myjourneys">My Journeys</Link></li>
+        <li>
+          <Link to="/home">Home</Link>
+        </li>
+        <li>
+          <Link to="/book">Book</Link>
+        </li>
+        <li>
+          <Link to="/myjourneys">My Journeys</Link>
+        </li>
 
+        {/* USER DROPDOWN */}
         {username ? (
-          <li className="profile-dropdown">
-            <button className="profile-btn">{username}</button>
-            <div className="dropdown-menu">
-              <button onClick={() => navigate("/profile")}>Profile</button>
-              <button onClick={handleLogout}>Logout</button>
-            </div>
+          <li className="profile-dropdown" ref={dropdownRef}>
+            {/* Username Button */}
+            <button
+              onClick={() => setShowDropdown(!showDropdown)}
+              className="profile-btn"
+            >
+              {username}
+            </button>
+
+            {/* Dropdown Menu */}
+            {showDropdown && (
+              <div className="dropdown-menu">
+                <button onClick={() => navigate("/profile")}>
+                  👤 View Profile
+                </button>
+                <button onClick={handleLogout}>
+                  🚪 Logout
+                </button>
+              </div>
+            )}
           </li>
         ) : (
           <li>
-            <Link to="/login" className="btn-login">Login</Link>
+            <Link to="/login" className="btn-glow">
+              Login
+            </Link>
           </li>
         )}
       </ul>
