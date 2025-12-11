@@ -18,17 +18,14 @@ const Login = () => {
     try {
       const data = await loginUser(formData);
 
-      // 🔥 Extract username safely
       const username =
         data.username ||
         data.user?.username ||
         formData.email.split("@")[0];
 
-      // 🔥 Store token + username
       localStorage.setItem("token", data.token);
       localStorage.setItem("username", username);
 
-      // 🔥 Notify navbar
       window.dispatchEvent(new Event("login"));
 
       setMessage("✅ Login Successful!");
@@ -79,10 +76,19 @@ const Login = () => {
             />
           </div>
 
+          {/* FIXED BUTTON — no btn-glow */}
           <motion.button
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
             type="submit"
-            className="btn-glow w-full"
+            className="
+              w-full py-2 rounded-md font-semibold text-white
+              bg-cyan-500/30 border border-cyan-400/40
+              hover:bg-cyan-500/40 hover:border-cyan-300
+              shadow-[0_0_8px_rgba(0,255,255,0.2)]
+              hover:shadow-[0_0_12px_rgba(0,255,255,0.35)]
+              transition-all text-sm backdrop-blur-md
+            "
           >
             Login
           </motion.button>
