@@ -9,8 +9,8 @@ const Navbar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const stored = localStorage.getItem("username");
-    setUsername(stored);
+    const storedUser = localStorage.getItem("username");
+    setUsername(storedUser);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -20,7 +20,6 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.clear();
     setUsername(null);
-    setOpen(false);
     navigate("/login");
   };
 
@@ -31,7 +30,6 @@ const Navbar = () => {
       </div>
 
       <ul className="nav-links">
-
         <li><Link to="/home">Home</Link></li>
         <li><Link to="/book">Book</Link></li>
         <li><Link to="/myjourneys">My Journeys</Link></li>

@@ -1,3 +1,4 @@
+/* NAVBAR MAIN */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -12,44 +13,60 @@
   z-index: 1000;
 }
 
+/* LOGO */
 .logo {
   font-size: 1.4rem;
   font-weight: 600;
   color: #00e6ff;
   cursor: pointer;
   transition: 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-
 .logo:hover {
   transform: scale(1.05);
 }
 
+/* NAV LINKS */
 .nav-links {
   display: flex;
-  gap: 18px;
   align-items: center;
+  gap: 18px;
+  list-style: none;
 }
 
+/* LINKS + PROFILE BUTTON */
 .nav-links a,
 .profile-btn {
   padding: 6px 14px;
   border-radius: 8px;
   border: 1px solid rgba(0, 255, 255, 0.3);
-  background: transparent;
+  background: rgba(0, 255, 255, 0.05);
   color: #b0bec5;
-  transition: 0.3s ease;
+  font-size: 0.92rem;
   text-decoration: none;
+  transition: all 0.25s ease;
   cursor: pointer;
 }
 
+/* HOVER GLASS EFFECT */
 .nav-links a:hover,
 .profile-btn:hover {
-  background: rgba(0, 255, 255, 0.08);
-  color: #fff;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.15);
-  transform: scale(1.03);
+  background: rgba(0, 255, 255, 0.12);
+  color: white;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  transform: translateY(-1px);
 }
 
+/* ACTIVE PAGE */
+.active-link {
+  background: rgba(0, 255, 255, 0.2);
+  border-color: rgba(0, 255, 255, 0.6);
+  color: white;
+}
+
+/* SHINE BUTTON (Login) */
 .btn-shine {
   position: relative;
   overflow: hidden;
@@ -68,8 +85,8 @@
   content: "";
   position: absolute;
   top: 0;
-  left: -130%;
-  width: 90%;
+  left: -140%;
+  width: 100%;
   height: 100%;
   background: linear-gradient(
     120deg,
@@ -81,14 +98,15 @@
 }
 
 .btn-shine:hover::before {
-  animation: shineMove 0.8s ease;
+  animation: shine 0.8s ease forwards;
 }
 
-@keyframes shineMove {
-  0% { left: -130%; }
-  100% { left: 130%; }
+@keyframes shine {
+  0% { left: -140%; }
+  100% { left: 140%; }
 }
 
+/* PROFILE DROPDOWN */
 .profile-dropdown {
   position: relative;
 }
@@ -99,7 +117,7 @@
   right: 0;
   background: rgba(12, 20, 35, 0.96);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 255, 255, 0.15);
+  border: 1px solid rgba(0, 255, 255, 0.2);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -109,16 +127,16 @@
 
 .dropdown-menu button {
   padding: 10px 16px;
-  color: #b0bec5;
-  background: none;
+  background: transparent;
   border: none;
-  cursor: pointer;
+  color: #b0bec5;
   text-align: left;
+  cursor: pointer;
   transition: 0.2s ease;
 }
 
 .dropdown-menu button:hover {
-  background: rgba(0, 255, 255, 0.1);
+  background: rgba(0, 255, 255, 0.15);
   color: white;
 }
 
@@ -126,4 +144,3 @@
   from { opacity: 0; transform: translateY(-8px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.navbar { border: 3px solid red !important; }
