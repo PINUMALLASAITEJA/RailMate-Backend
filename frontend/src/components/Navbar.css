@@ -116,3 +116,15 @@
     transform: translateY(0);
   }
 }
+/* Prevent unwanted shine before login */
+.navbar-hidden * {
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+}
+
+/* Once mounted → enable full animations */
+.navbar-ready {
+  opacity: 1;
+  transition: opacity 0.2s ease-in;
+}

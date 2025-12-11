@@ -5,13 +5,20 @@ import "./Navbar.css";
 const Navbar = () => {
   const [username, setUsername] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false); // 🔥 NEW: prevents load-glitch
   const menuRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Load username when route changes
+  // Mark navbar fully mounted
   useEffect(() => {
-    setUsername(localStorage.getItem("username") || null);
+    setMounted(true);
+  }, []);
+
+  // Load username on route change
+  useEffect(() => {
+    const storedUser = localStorage.getItem("username");
+    setUsername(storedUser);
   }, [location.pathname]);
 
   // Close dropdown when clicking outside
@@ -28,12 +35,13 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+
     setUsername(null);
     navigate("/login");
   };
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${mounted ? "navbar-ready" : "navbar-hidden"}`}>
       {/* Logo */}
       <div className="logo" onClick={() => navigate("/home")}>
         🚆 <span>RailMate</span>
@@ -68,7 +76,6 @@ const Navbar = () => {
           </Link>
         </li>
 
-        {/* Logged-in user dropdown */}
         {username ? (
           <li className="profile-dropdown" ref={menuRef}>
             <button
