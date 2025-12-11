@@ -1,10 +1,7 @@
-/* =======================
-   🌐 Navbar Styles
-   ======================= */
 .navbar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   padding: 14px 50px;
   background: rgba(8, 17, 30, 0.6);
   backdrop-filter: blur(12px);
@@ -15,111 +12,51 @@
   z-index: 1000;
 }
 
-/* 🚆 Logo */
 .logo {
   font-size: 1.4rem;
   font-weight: 600;
   color: #00e6ff;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
   transition: 0.3s ease;
 }
+
 .logo:hover {
   transform: scale(1.05);
 }
 
-/* 🔗 Nav Links */
 .nav-links {
-  list-style: none;
   display: flex;
-  align-items: center;
   gap: 18px;
+  align-items: center;
 }
 
-.nav-links li {
-  position: relative;
-}
-
-/* Base nav links and profile button */
 .nav-links a,
 .profile-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 255, 0.3);
   background: transparent;
   color: #b0bec5;
-  font-weight: 500;
-  font-size: 0.93rem;
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  border-radius: 8px;
-  padding: 6px 14px;
-  text-decoration: none;
   transition: 0.3s ease;
+  text-decoration: none;
   cursor: pointer;
 }
 
 .nav-links a:hover,
 .profile-btn:hover {
-  color: #ffffff;
   background: rgba(0, 255, 255, 0.08);
+  color: #fff;
   box-shadow: 0 0 8px rgba(0, 255, 255, 0.15);
   transform: scale(1.03);
 }
 
-/* Active page */
-.active-link {
-  color: #00e6ff;
-  border-color: rgba(0, 255, 255, 0.5);
-  background: rgba(0, 255, 255, 0.1);
-}
-
-/* Dropdown */
-.profile-dropdown {
-  position: relative;
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 42px;
-  right: 0;
-  background: rgba(12, 20, 35, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 255, 255, 0.15);
-  border-radius: 10px;
-  flex-direction: column;
-  display: flex;
-  overflow: hidden;
-  box-shadow: 0 0 18px rgba(0, 255, 255, 0.08);
-  min-width: 140px;
-}
-
-.dropdown-menu button {
-  background: none;
-  border: none;
-  color: #b0bec5;
-  padding: 10px 16px;
-  text-align: left;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.dropdown-menu button:hover {
-  background: rgba(0, 255, 255, 0.1);
-  color: white;
-}
-
-/* 🌟 Glossy Shine Button (Login) */
 .btn-shine {
   position: relative;
   overflow: hidden;
   background: rgba(0, 255, 255, 0.15);
-  color: white;
-  padding: 8px 18px;
-  border-radius: 8px;
   border: 1px solid rgba(0, 255, 255, 0.4);
-  cursor: pointer;
-  transition: 0.3s ease;
   backdrop-filter: blur(6px);
+  color: white;
 }
 
 .btn-shine:hover {
@@ -127,18 +64,17 @@
   box-shadow: 0 0 12px rgba(0, 255, 255, 0.35);
 }
 
-/* Shine animation */
 .btn-shine::before {
   content: "";
   position: absolute;
   top: 0;
-  left: -120%;
-  width: 70%;
+  left: -130%;
+  width: 90%;
   height: 100%;
   background: linear-gradient(
     120deg,
     transparent,
-    rgba(255, 255, 255, 0.6),
+    rgba(255, 255, 255, 0.7),
     transparent
   );
   transform: skewX(-20deg);
@@ -149,10 +85,45 @@
 }
 
 @keyframes shineMove {
-  0% {
-    left: -120%;
-  }
-  100% {
-    left: 140%;
-  }
+  0% { left: -130%; }
+  100% { left: 130%; }
 }
+
+.profile-dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  background: rgba(12, 20, 35, 0.96);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 255, 255, 0.15);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+  animation: fadeIn 0.2s ease;
+}
+
+.dropdown-menu button {
+  padding: 10px 16px;
+  color: #b0bec5;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: 0.2s ease;
+}
+
+.dropdown-menu button:hover {
+  background: rgba(0, 255, 255, 0.1);
+  color: white;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.navbar { border: 3px solid red !important; }
