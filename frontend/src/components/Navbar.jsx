@@ -1,102 +1,67 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "../styles/Navbar.css";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const [username, setUsername] = useState(null);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // 🔹 Load username on load
+  // 🔥 Always update username whenever route changes (works 100%)
   useEffect(() => {
-    setUsername(localStorage.getItem("username") || null);
-  }, []);
-
-  // 🔹 Listen for login/logout events
-  useEffect(() => {
-    const updateUser = () => {
-      setUsername(localStorage.getItem("username") || null);
-    };
-
-    window.addEventListener("storage", updateUser);
-    window.addEventListener("login", updateUser);
-
-    return () => {
-      window.removeEventListener("storage", updateUser);
-      window.removeEventListener("login", updateUser);
-    };
-  }, []);
-
-  // 🔹 Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setShowDropdown(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    const storedUser = localStorage.getItem("username");
+    setUsername(storedUser);
+  }, [location.pathname]); 
+  // re-check username on every navigation
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+
     setUsername(null);
     navigate("/login");
   };
 
   return (
-    <nav className="navbar">
+    <nav className="w-full bg-[#0b1628]/80 backdrop-blur-lg text-white px-6 py-3 flex justify-between items-center shadow-lg">
+
       {/* Logo */}
-      <Link to="/home" className="logo">
+      <Link to="/home" className="text-xl font-semibold text-cyan-400 tracking-wide">
         🚆 RailMate
       </Link>
 
-      {/* NAV LINKS */}
-      <ul className="nav-links">
-        <li>
-          <Link to="/home">Home</Link>
-        </li>
-        <li>
-          <Link to="/book">Book</Link>
-        </li>
-        <li>
-          <Link to="/myjourneys">My Journeys</Link>
-        </li>
+      {/* Navigation */}
+      <div className="flex items-center gap-6 text-sm">
+        <Link to="/home" className="hover:text-cyan-400">Home</Link>
+        <Link to="/book" className="hover:text-cyan-400">Book</Link>
+        <Link to="/myjourneys" className="hover:text-cyan-400">My Journeys</Link>
 
-        {/* USER DROPDOWN */}
+        {/* 🔥 After Login → Show username + profile + logout */}
         {username ? (
-          <li className="profile-dropdown" ref={dropdownRef}>
-            {/* Username Button */}
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="profile-btn"
+          <div className="flex items-center gap-4">
+
+            <Link
+              to="/profile"
+              className="px-3 py-1 rounded-md bg-cyan-500/20 border border-cyan-400/30 hover:bg-cyan-500/30"
             >
               {username}
-            </button>
-
-            {/* Dropdown Menu */}
-            {showDropdown && (
-              <div className="dropdown-menu">
-                <button onClick={() => navigate("/profile")}>
-                  👤 View Profile
-                </button>
-                <button onClick={handleLogout}>
-                  🚪 Logout
-                </button>
-              </div>
-            )}
-          </li>
-        ) : (
-          <li>
-            <Link to="/login" className="btn-glow">
-              Login
             </Link>
-          </li>
+
+            <button
+              onClick={handleLogout}
+              className="px-3 py-1 rounded-md bg-red-500/20 border border-red-400/30 hover:bg-red-500/30"
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <Link
+            to="/login"
+            className="px-3 py-1 rounded-md bg-cyan-500 hover:bg-cyan-600 transition"
+          >
+            Login
+          </Link>
         )}
-      </ul>
+      </div>
     </nav>
   );
 };
