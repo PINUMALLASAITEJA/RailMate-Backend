@@ -2,106 +2,149 @@
 .navbar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 14px 50px;
-  background: rgba(8, 17, 30, 0.65);
+  align-items: center;           /* vertical center */
+  gap: 24px;
+  padding: 12px 28px;
+  height: 64px;                  /* fixed height for consistent alignment */
+  background: rgba(8, 17, 30, 0.72);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.12);
   position: sticky;
   top: 0;
   z-index: 1000;
+  box-sizing: border-box;
 }
 
 /* Logo */
 .logo {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   color: #00e6ff;
-  font-weight: 600;
-  display: flex;
-  gap: 6px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
-  transition: 0.3s;
+  user-select: none;
 }
-.logo:hover {
-  transform: scale(1.05);
+.logo span {
+  margin-left: 4px;
+  letter-spacing: 0.4px;
 }
 
-/* Nav Links */
+/* Reset list */
 .nav-links {
   display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
   list-style: none;
-  gap: 18px;
 }
+
+/* Ensure li uses flex for comfortable centering */
 .nav-links li {
-  position: relative;
+  display: flex;
+  align-items: center;
 }
 
+/* NAV BUTTONS */
 .nav-btn {
-  padding: 6px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.05);
-  color: #b0bec5;
-  transition: 0.3s;
-  cursor: pointer;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.03);
+  color: #bcd7de;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform .18s ease, background .18s ease, color .18s ease;
 }
 
+/* Remove leftover focus outlines that create weird boxes */
+.nav-btn:focus,
+.profile-btn:focus,
+.nav-links a:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Hover */
 .nav-btn:hover {
-  background: rgba(0, 255, 255, 0.15);
-  color: white;
-  transform: scale(1.04);
+  transform: translateY(-2px);
+  background: rgba(0, 255, 255, 0.12);
+  color: #fff;
 }
 
+/* Active */
 .active-link {
-  background: rgba(0, 255, 255, 0.15);
-  border-color: rgba(0, 255, 255, 0.5);
+  background: rgba(0, 230, 255, 0.12);
+  border-color: rgba(0, 230, 255, 0.38);
   color: #00e6ff;
 }
 
-/* Profile dropdown */
+/* Profile dropdown container */
 .profile-dropdown {
   position: relative;
 }
 
+/* Profile button */
 .profile-btn {
-  padding: 6px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.07);
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.03);
   color: #00e6ff;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-.profile-btn:hover {
-  background: rgba(0, 255, 255, 0.15);
+/* small caret spacing */
+.profile-btn .caret {
+  margin-left: 6px;
+  font-size: 0.8rem;
+  opacity: 0.85;
 }
 
+/* Dropdown (hidden until .open) */
 .dropdown-menu {
   position: absolute;
+  top: calc(100% + 8px);   /* directly under the button */
   right: 0;
-  top: 42px;
-  background: rgba(12, 20, 35, 0.95);
-  border: 1px solid rgba(0, 255, 255, 0.15);
-  border-radius: 10px;
   display: none;
   flex-direction: column;
-  min-width: 140px;
+  min-width: 150px;
+  background: rgba(12, 20, 35, 0.98);
+  border: 1px solid rgba(0, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 6px 6px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  z-index: 1200;
 }
 
+/* show when open */
 .profile-dropdown.open .dropdown-menu {
   display: flex;
 }
 
+/* Dropdown buttons */
 .dropdown-menu button {
-  padding: 10px 18px;
-  border: none;
   background: transparent;
-  color: #b0bec5;
+  border: none;
+  color: #bcd7de;
+  padding: 10px 12px;
   text-align: left;
   cursor: pointer;
+  border-radius: 6px;
+  transition: background .12s ease, color .12s ease;
 }
+
 .dropdown-menu button:hover {
-  background: rgba(0, 255, 255, 0.1);
-  color: white;
+  background: rgba(0, 255, 255, 0.06);
+  color: #fff;
 }
