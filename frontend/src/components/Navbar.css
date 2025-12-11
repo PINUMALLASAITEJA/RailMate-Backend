@@ -1,130 +1,107 @@
-/* =======================
-   🌐 NAVBAR MASTER STYLE
-   ======================= */
+/* NAVBAR MAIN */
 .navbar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   padding: 14px 50px;
-  background: rgba(8, 17, 30, 0.55);
+  background: rgba(8, 17, 30, 0.65);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(0, 255, 255, 0.12);
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.15);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
 }
 
-/* 🚆 Logo */
+/* Logo */
 .logo {
-  font-size: 1.35rem;
-  font-weight: 600;
+  font-size: 1.4rem;
   color: #00e6ff;
+  font-weight: 600;
   display: flex;
-  align-items: center;
   gap: 6px;
   cursor: pointer;
-  transition: 0.25s;
+  transition: 0.3s;
 }
 .logo:hover {
   transform: scale(1.05);
 }
 
-/* NAV LINKS */
+/* Nav Links */
 .nav-links {
   display: flex;
-  align-items: center;
-  gap: 18px;
   list-style: none;
+  gap: 18px;
+}
+.nav-links li {
+  position: relative;
 }
 
-.nav-links a,
-.btn-glow,
-.profile-btn {
-  background: rgba(0, 255, 255, 0.08);
-  border: 1px solid rgba(0, 255, 255, 0.25);
+.nav-btn {
+  padding: 6px 14px;
   border-radius: 8px;
-  padding: 7px 15px;
-  text-decoration: none;
-  color: #c7d4d8;
-  font-size: 0.95rem;
-  transition: 0.25s ease-in-out;
-  backdrop-filter: blur(6px);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  color: #b0bec5;
+  transition: 0.3s;
+  cursor: pointer;
 }
 
-.nav-links a:hover,
-.btn-glow:hover,
-.profile-btn:hover {
-  background: rgba(0, 255, 255, 0.16);
-  border-color: rgba(0, 255, 255, 0.45);
+.nav-btn:hover {
+  background: rgba(0, 255, 255, 0.15);
   color: white;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.25);
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 
-/* Active Link */
 .active-link {
-  background: rgba(0, 255, 255, 0.2);
-  border-color: rgba(0, 255, 255, 0.55);
+  background: rgba(0, 255, 255, 0.15);
+  border-color: rgba(0, 255, 255, 0.5);
   color: #00e6ff;
 }
 
-/* DROPDOWN */
+/* Profile dropdown */
 .profile-dropdown {
   position: relative;
 }
 
+.profile-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.07);
+  color: #00e6ff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.profile-btn:hover {
+  background: rgba(0, 255, 255, 0.15);
+}
+
 .dropdown-menu {
   position: absolute;
-  top: 45px;
   right: 0;
-  background: rgba(12, 20, 35, 0.92);
-  border: 1px solid rgba(0, 255, 255, 0.18);
+  top: 42px;
+  background: rgba(12, 20, 35, 0.95);
+  border: 1px solid rgba(0, 255, 255, 0.15);
   border-radius: 10px;
-  padding: 5px 0;
-  display: flex;
+  display: none;
   flex-direction: column;
-  min-width: 150px;
-  box-shadow: 0 0 18px rgba(0, 255, 255, 0.2);
-  animation: fadeIn 0.2s ease-out;
+  min-width: 140px;
+}
+
+.profile-dropdown.open .dropdown-menu {
+  display: flex;
 }
 
 .dropdown-menu button {
-  background: transparent;
+  padding: 10px 18px;
   border: none;
-  color: #c7d4d8;
-  padding: 10px 15px;
+  background: transparent;
+  color: #b0bec5;
   text-align: left;
-  font-size: 0.9rem;
   cursor: pointer;
-  transition: 0.25s;
 }
-
 .dropdown-menu button:hover {
-  background: rgba(0, 255, 255, 0.15);
+  background: rgba(0, 255, 255, 0.1);
   color: white;
-}
-
-/* Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-/* Prevent unwanted shine before login */
-.navbar-hidden * {
-  animation: none !important;
-  transition: none !important;
-  box-shadow: none !important;
-}
-
-/* Once mounted → enable full animations */
-.navbar-ready {
-  opacity: 1;
-  transition: opacity 0.2s ease-in;
 }
