@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "./Navbar.css";
 
@@ -7,42 +7,33 @@ const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const dropdownRef = useRef();
 
-  // Load username when route changes OR when login updates
+  // Load username whenever route changes
   useEffect(() => {
     const storedUser = localStorage.getItem("username");
     setUsername(storedUser);
   }, [location.pathname]);
 
-  // Close dropdown on outside click
+  // Close dropdown on navigation
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
+    setDropdownOpen(false);
+  }, [location.pathname]);
 
-  // Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     setUsername(null);
-    setDropdownOpen(false);
     navigate("/login");
   };
 
   return (
     <nav className="navbar">
-      
       {/* Logo */}
       <div className="logo" onClick={() => navigate("/home")}>
         🚆 <span>RailMate</span>
       </div>
 
+      {/* Navigation Links */}
       <ul className="nav-links">
         <li>
           <Link
@@ -71,11 +62,9 @@ const Navbar = () => {
           </Link>
         </li>
 
-        {/* If logged in → username button + dropdown */}
+        {/* If logged in */}
         {username ? (
-          <li className="profile-dropdown" ref={dropdownRef}>
-            
-            {/* Username Button */}
+          <li className="profile-dropdown">
             <button
               className="profile-btn"
               onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -83,25 +72,22 @@ const Navbar = () => {
               {username}
             </button>
 
-            {/* Dropdown (only visible when dropdownOpen = true) */}
             {dropdownOpen && (
               <div className="dropdown-menu">
-                <button onClick={() => navigate("/profile")}>
-                  View Profile
-                </button>
+                <button onClick={() => navigate("/profile")}>View Profile</button>
                 <button onClick={handleLogout}>Logout</button>
               </div>
             )}
           </li>
         ) : (
+          // Login Button with shiny effect
           <li>
-            <Link to="/login" className="btn-glow">
+            <Link to="/login" className="btn-shine">
               Login
             </Link>
           </li>
         )}
       </ul>
-
     </nav>
   );
 };

@@ -1,5 +1,5 @@
 /* =======================
-   🌐 Navbar Styles (Unified Glow)
+   🌐 Navbar Styles
    ======================= */
 .navbar {
   display: flex;
@@ -24,8 +24,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  letter-spacing: 0.5px;
-  transition: transform 0.3s ease;
+  transition: 0.3s ease;
 }
 .logo:hover {
   transform: scale(1.05);
@@ -43,9 +42,8 @@
   position: relative;
 }
 
-/* 🌈 Apply unified button style to all links and login */
+/* Base nav links and profile button */
 .nav-links a,
-.navbar .btn-glow,
 .profile-btn {
   background: transparent;
   color: #b0bec5;
@@ -55,14 +53,11 @@
   border-radius: 8px;
   padding: 6px 14px;
   text-decoration: none;
-  transition: all 0.3s ease;
-  box-shadow: none;
+  transition: 0.3s ease;
   cursor: pointer;
 }
 
-/* Subtle hover glow for all nav items */
 .nav-links a:hover,
-.navbar .btn-glow:hover,
 .profile-btn:hover {
   color: #ffffff;
   background: rgba(0, 255, 255, 0.08);
@@ -77,12 +72,11 @@
   background: rgba(0, 255, 255, 0.1);
 }
 
-/* 👤 Profile dropdown container */
+/* Dropdown */
 .profile-dropdown {
   position: relative;
 }
 
-/* Dropdown Menu */
 .dropdown-menu {
   position: absolute;
   top: 42px;
@@ -91,22 +85,22 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 255, 255, 0.15);
   border-radius: 10px;
-  display: flex;
   flex-direction: column;
+  display: flex;
   overflow: hidden;
   box-shadow: 0 0 18px rgba(0, 255, 255, 0.08);
   min-width: 140px;
 }
 
 .dropdown-menu button {
-  background: transparent;
+  background: none;
   border: none;
   color: #b0bec5;
-  font-size: 0.9rem;
   padding: 10px 16px;
   text-align: left;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
 }
 
 .dropdown-menu button:hover {
@@ -114,26 +108,51 @@
   color: white;
 }
 
-/* ✨ Login Button (same style as all links) */
-.navbar .btn-glow {
-  background: transparent !important;
-  color: #b0bec5 !important;
-  font-weight: 500 !important;
-  border: 1px solid rgba(0, 255, 255, 0.3) !important;
-  border-radius: 8px !important;
-  padding: 6px 14px !important;
-  transition: all 0.3s ease !important;
-  box-shadow: none !important;
+/* 🌟 Glossy Shine Button (Login) */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+  background: rgba(0, 255, 255, 0.15);
+  color: white;
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  cursor: pointer;
+  transition: 0.3s ease;
+  backdrop-filter: blur(6px);
 }
 
-.navbar .btn-glow:hover {
-  color: #ffffff !important;
-  background: rgba(0, 255, 255, 0.08) !important;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.15) !important;
-  transform: scale(1.03);
-}
-/* Hide dropdown by default (React controls visibility) */
-.dropdown-menu {
-  display: flex;
+.btn-shine:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.35);
 }
 
+/* Shine animation */
+.btn-shine::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 70%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  transform: skewX(-20deg);
+}
+
+.btn-shine:hover::before {
+  animation: shineMove 0.8s ease;
+}
+
+@keyframes shineMove {
+  0% {
+    left: -120%;
+  }
+  100% {
+    left: 140%;
+  }
+}
