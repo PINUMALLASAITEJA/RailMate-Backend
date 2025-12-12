@@ -16,7 +16,7 @@ const Profile = () => {
 
     (async () => {
       try {
-        const res = await getProfile(); // <-- no token param
+        const res = await getProfile();
         if (res.user && res.user.email) {
           setUser(res.user);
         } else if (res.email) {
@@ -68,18 +68,20 @@ const Profile = () => {
               </p>
             </div>
 
+            {/* 🔥 Updated logout button styling */}
             <motion.button
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => {
                 localStorage.clear();
-                window.dispatchEvent(new Event("storage")); // update navbar instantly
+                window.dispatchEvent(new Event("storage"));
                 navigate("/login");
               }}
-              className="btn-nav mt-4"
+              className="nav-btn mt-4 px-6 py-2 text-sm"
             >
               🚪 Logout
             </motion.button>
+
           </motion.div>
         ) : (
           <p className="text-gray-400 text-sm">⏳ Loading profile...</p>
