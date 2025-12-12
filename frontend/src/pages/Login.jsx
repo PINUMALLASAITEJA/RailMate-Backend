@@ -97,13 +97,16 @@ const Login = () => {
           </p>
         )}
 
-        <p className="text-gray-400 text-xs mt-5">
-          Don’t have an account?{" "}
-          <Link to="/register" className="nav-btn">
-            Register
-            </Link>
+       <div className="mt-5 text-center">
+  <p className="text-gray-400 text-xs mb-2">Don’t have an account?</p>
 
-        </p>
+  <Link to="/register" className="block">
+    <button className="btn-glow w-full py-2 text-sm font-semibold">
+      Register
+    </button>
+  </Link>
+</div>
+
       </motion.div>
     </section>
   );
