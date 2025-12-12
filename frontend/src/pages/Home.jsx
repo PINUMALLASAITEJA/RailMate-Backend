@@ -20,7 +20,7 @@ const Home = () => {
         <motion.div
           animate={{ y: [0, -6, 0] }}
           transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-          className="text-5xl mb-3"
+          className="text-8xl mb-3"
         >
           🚆
         </motion.div>
