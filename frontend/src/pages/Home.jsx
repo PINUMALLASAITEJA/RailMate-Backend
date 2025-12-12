@@ -19,12 +19,12 @@ const Home = () => {
         
         {/* 🚆 BIG FLOATING TRAIN ICON */}
         <div className="relative flex justify-center mb-4">
-          <div className="absolute w-32 h-32 bg-cyan-400/10 blur-2xl rounded-full"></div>
+          <div className="absolute w-40 h-40 bg-cyan-400/10 blur-3xl rounded-full"></div>
 
           <motion.div
             animate={{ y: [0, -12, 0] }}
             transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-            className="text-15xl"
+            style={{ fontSize: "10rem", lineHeight: 1 }}   // 💥 Huge train
           >
             🚆
           </motion.div>
@@ -35,8 +35,8 @@ const Home = () => {
         </h1>
 
         <p className="text-gray-300 text-base leading-relaxed">
-          Your intelligent railway booking c
-          glassmorphism aesthetics, smooth performance, and real-time tracking.
+          Your intelligent railway booking companion — enhanced with smooth animations,
+          premium glassmorphism UI, and real-time tracking.
         </p>
 
       </motion.div>
