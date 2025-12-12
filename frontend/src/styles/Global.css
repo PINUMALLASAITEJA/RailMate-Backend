@@ -11,7 +11,7 @@ html, body {
 
 * {
   -webkit-tap-highlight-color: transparent;
-  box-sizing: border-box;      /* FIX overflow everywhere */
+  box-sizing: border-box;
 }
 
 /* ============================
@@ -22,7 +22,7 @@ html, body {
   border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(14px);
   border-radius: 16px;
-  width: 340px;                /* FIXED width like Register.jsx */
+  width: 340px;
   max-width: 100%;
   padding: 24px;
   box-shadow: 0 0 25px rgba(0, 255, 255, 0.08);
@@ -32,14 +32,13 @@ html, body {
    INPUTS
 ============================ */
 .input {
-  width: 100%;                 /* FIX overflow */
+  width: 100%;
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(0, 255, 255, 0.25);
   border-radius: 8px;
   padding: 10px 12px;
   color: white;
   transition: 0.3s;
-  box-sizing: border-box;      /* CRITICAL FIX */
 }
 
 .input:focus {
@@ -52,7 +51,7 @@ html, body {
    BUTTONS — Diamond Shine
 ============================ */
 .btn-glow {
-  width: 100%;                 /* FIX overflowing button */
+  width: 100%;
   background: rgba(0, 255, 255, 0.18);
   border: 1px solid rgba(0, 255, 255, 0.45);
   padding: 10px 16px;
@@ -65,7 +64,7 @@ html, body {
   transition: 0.3s ease;
 }
 
-/* Diamond Shine Animation */
+/* Diamond Shine */
 .btn-glow::before {
   content: "";
   position: absolute;
@@ -82,7 +81,6 @@ html, body {
   transition: 0.6s ease-in-out;
 }
 
-/* Shine moves ONLY on hover */
 .btn-glow:hover::before {
   left: 120%;
 }
@@ -92,29 +90,35 @@ html, body {
   box-shadow: 0 0 12px rgba(0, 255, 255, 0.25);
 }
 
-/* ====================================================
-   NAVBAR FIX — Remove diamond shine ONLY in navbar
-==================================================== */
-.navbar .btn-glow,
+/* ============================
+   NAVBAR OVERRIDES
+============================ */
+
+/* Normal navbar buttons (NO shine) */
 .navbar .nav-btn,
-.navbar .profile-btn {
-  overflow: visible !important;
+.navbar .profile-btn,
+.navbar .btn-glow {
   background: rgba(255, 255, 255, 0.05) !important;
   border: 1px solid rgba(0, 255, 255, 0.25) !important;
-  box-shadow: none !important;
+  color: #b0bec5 !important;
+  padding: 6px 14px !important;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: 0.25s ease;
+  overflow: hidden; /* FIX navbar weird shine ghost */
 }
 
-/* REMOVE shine animation in navbar completely */
-.navbar .btn-glow::before,
+/* REMOVE shine animation ONLY inside navbar */
 .navbar .nav-btn::before,
-.navbar .profile-btn::before {
+.navbar .profile-btn::before,
+.navbar .btn-glow::before {
   content: none !important;
 }
 
-/* Soft hover for navbar */
-.navbar .btn-glow:hover,
 .navbar .nav-btn:hover,
-.navbar .profile-btn:hover {
+.navbar .profile-btn:hover,
+.navbar .btn-glow:hover {
   background: rgba(0, 255, 255, 0.12) !important;
-  transform: scale(1.02);
+  color: white !important;
+  transform: scale(1.03);
 }

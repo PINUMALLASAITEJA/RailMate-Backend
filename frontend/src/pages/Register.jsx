@@ -119,9 +119,10 @@ const Register = () => {
 
         <p className="text-gray-400 text-xs mt-5">
           Already have an account?{" "}
-          <Link to="/login" className="text-cyan-400 hover:underline">
-            Login
-          </Link>
+          <Link to="/login" className="nav-btn">
+  Login
+</Link>
+
         </p>
       </motion.div>
     </section>

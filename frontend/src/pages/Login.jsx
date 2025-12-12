@@ -99,9 +99,10 @@ const Login = () => {
 
         <p className="text-gray-400 text-xs mt-5">
           Don’t have an account?{" "}
-          <Link to="/register" className="text-cyan-400 hover:underline">
+          <Link to="/register" className="nav-btn">
             Register
-          </Link>
+            </Link>
+
         </p>
       </motion.div>
     </section>
