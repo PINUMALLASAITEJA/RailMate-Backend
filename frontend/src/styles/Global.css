@@ -108,12 +108,6 @@ html, body {
   overflow: hidden; /* FIX navbar weird shine ghost */
 }
 
-/* REMOVE shine animation ONLY inside navbar */
-.navbar .nav-btn::before,
-.navbar .profile-btn::before,
-.navbar .btn-glow::before {
-  content: none !important;
-}
 
 .navbar .nav-btn:hover,
 .navbar .profile-btn:hover,

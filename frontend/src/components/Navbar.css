@@ -1,11 +1,13 @@
-/* NAVBAR MAIN */
+/* ============================
+   NAVBAR MAIN
+============================ */
 .navbar {
   display: flex;
   justify-content: space-between;
-  align-items: center;           /* vertical center */
+  align-items: center;
   gap: 24px;
   padding: 12px 28px;
-  height: 64px;                  /* fixed height for consistent alignment */
+  height: 64px;
   background: rgba(8, 17, 30, 0.72);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(0, 255, 255, 0.12);
@@ -15,7 +17,9 @@
   box-sizing: border-box;
 }
 
-/* Logo */
+/* ============================
+   LOGO
+============================ */
 .logo {
   font-size: 1.2rem;
   color: #00e6ff;
@@ -31,7 +35,9 @@
   letter-spacing: 0.4px;
 }
 
-/* Reset list */
+/* ============================
+   NAV LINKS
+============================ */
 .nav-links {
   display: flex;
   align-items: center;
@@ -41,80 +47,88 @@
   list-style: none;
 }
 
-/* Ensure li uses flex for comfortable centering */
 .nav-links li {
   display: flex;
   align-items: center;
 }
 
-/* NAV BUTTONS */
-.nav-btn {
+/* ============================
+   NAV BUTTONS (Diamond Shine)
+============================ */
+.nav-btn,
+.profile-btn {
+  position: relative;
+  overflow: hidden;
   padding: 8px 14px;
   border-radius: 10px;
-  border: 1px solid rgba(0, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.03);
-  color: #bcd7de;
+  border: 1px solid rgba(0, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  color: #e4faff;
   font-weight: 600;
-  line-height: 1;
   text-decoration: none;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  transition: transform .18s ease, background .18s ease, color .18s ease;
+  gap: 6px;
+  transition: 0.25s ease;
 }
 
-/* Remove leftover focus outlines that create weird boxes */
-.nav-btn:focus,
-.profile-btn:focus,
-.nav-links a:focus {
-  outline: none;
-  box-shadow: none;
+/* Diamond Shine Animation */
+.nav-btn::before,
+.profile-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 120%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.45),
+    transparent
+  );
+  transition: 0.6s ease-in-out;
 }
 
-/* Hover */
-.nav-btn:hover {
-  transform: translateY(-2px);
-  background: rgba(0, 255, 255, 0.12);
+/* Shine moves on hover */
+.nav-btn:hover::before,
+.profile-btn:hover::before {
+  left: 130%;
+}
+
+.nav-btn:hover,
+.profile-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.12);
   color: #fff;
 }
 
-/* Active */
+/* Active link */
 .active-link {
-  background: rgba(0, 230, 255, 0.12);
-  border-color: rgba(0, 230, 255, 0.38);
+  background: rgba(0, 230, 255, 0.18);
+  border-color: rgba(0, 230, 255, 0.45);
   color: #00e6ff;
 }
 
-/* Profile dropdown container */
+/* ============================
+   PROFILE DROPDOWN
+============================ */
 .profile-dropdown {
   position: relative;
 }
 
-/* Profile button */
-.profile-btn {
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(0, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.03);
-  color: #00e6ff;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-}
-
-/* small caret spacing */
 .profile-btn .caret {
+  font-size: 0.75rem;
+  opacity: 0.75;
   margin-left: 6px;
-  font-size: 0.8rem;
-  opacity: 0.85;
 }
 
-/* Dropdown (hidden until .open) */
+/* Dropdown container */
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 8px);   /* directly under the button */
+  top: calc(100% + 8px);
   right: 0;
   display: none;
   flex-direction: column;
@@ -122,12 +136,12 @@
   background: rgba(12, 20, 35, 0.98);
   border: 1px solid rgba(0, 255, 255, 0.12);
   border-radius: 10px;
-  padding: 6px 6px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  padding: 6px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
   z-index: 1200;
 }
 
-/* show when open */
+/* Show dropdown when class=open */
 .profile-dropdown.open .dropdown-menu {
   display: flex;
 }
@@ -139,12 +153,13 @@
   color: #bcd7de;
   padding: 10px 12px;
   text-align: left;
+  font-size: 0.9rem;
   cursor: pointer;
   border-radius: 6px;
-  transition: background .12s ease, color .12s ease;
+  transition: background 0.15s, color 0.15s;
 }
 
 .dropdown-menu button:hover {
-  background: rgba(0, 255, 255, 0.06);
+  background: rgba(0, 255, 255, 0.1);
   color: #fff;
 }
