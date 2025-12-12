@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-const BASE_URL = "http://127.0.0.1:5000";
+const BASE_URL = "https://rail-mate-backend.vercel.app";
 
 const MyJourneys = () => {
   const [tickets, setTickets] = useState([]);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [toast, setToast] = useState(null);
-  const username = sessionStorage.getItem("username");
+
+  // IMPORTANT FIX 🔥 — USE localStorage (NOT sessionStorage)
+  const username = localStorage.getItem("username");
 
   useEffect(() => {
     if (username) fetchTickets();
@@ -19,7 +21,9 @@ const MyJourneys = () => {
       const res = await fetch(
         `${BASE_URL}/my_tickets?booked_by=${encodeURIComponent(username)}`
       );
+
       const data = await res.json();
+
       if (res.ok && data.tickets) setTickets(data.tickets);
       else setTickets([]);
     } catch (err) {
@@ -63,9 +67,11 @@ const MyJourneys = () => {
       });
 
       const data = await res.json();
+
       if (res.ok) {
         setToast({ type: "success", message: data.message });
         fetchTickets();
+
         setSelectedTicket((prev) => ({
           ...prev,
           passengers: prev.passengers.filter((p) => p.name !== passenger_name),
@@ -84,13 +90,13 @@ const MyJourneys = () => {
   return (
     <>
       <section className="min-h-screen flex flex-col items-center justify-start bg-gradient-to-br from-[#08111e] via-[#0b1628] to-[#101a2e] text-white px-5 py-12">
+        
         <div className="text-center mb-10">
           <h1 className="text-3xl font-semibold text-cyan-400 mb-2">
             🎟️ My Journeys
           </h1>
           <p className="text-gray-300 text-sm">
-            All tickets booked under your account{" "}
-            <span className="text-cyan-400">({username})</span>
+            All tickets booked under <span className="text-cyan-400">{username}</span>
           </p>
         </div>
 
@@ -141,7 +147,7 @@ const MyJourneys = () => {
         )}
       </section>
 
-      {/* ✅ Modal */}
+      {/* Ticket Modal */}
       {showModal && selectedTicket && (
         <div className="modal-overlay" onClick={closeTicket}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
