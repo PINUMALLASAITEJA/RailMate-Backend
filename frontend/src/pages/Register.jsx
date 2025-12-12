@@ -117,13 +117,16 @@ const Register = () => {
           </p>
         )}
 
-        <p className="text-gray-400 text-xs mt-5">
-          Already have an account?{" "}
-          <Link to="/login" className="nav-btn">
-  Login
-</Link>
+       <div className="mt-5 text-center">
+  <p className="text-gray-400 text-xs mb-2">Already have an account?</p>
 
-        </p>
+  <Link to="/login" className="block">
+    <button className="btn-glow w-full py-2 text-sm font-semibold">
+      Login
+    </button>
+  </Link>
+</div>
+
       </motion.div>
     </section>
   );
