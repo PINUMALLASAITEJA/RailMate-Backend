@@ -35,7 +35,7 @@ const Home = () => {
         </h1>
 
         <p className="text-gray-300 text-base leading-relaxed">
-          Your intelligent railway booking companion — designed with modern
+          Your intelligent railway booking c
           glassmorphism aesthetics, smooth performance, and real-time tracking.
         </p>
 
