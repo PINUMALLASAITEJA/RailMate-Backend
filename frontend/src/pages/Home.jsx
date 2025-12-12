@@ -18,12 +18,13 @@ const Home = () => {
       >
         {/* 🔥 Floating Train Icon */}
         <motion.div
-          animate={{ y: [0, -6, 0] }}
-          transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-          className="text-8xl mb-3"
-        >
-          🚆
-        </motion.div>
+  animate={{ y: [0, -10, 0] }}
+  transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+  className="text-8xl mb-5"
+>
+  🚆
+</motion.div>
+
 
         {/* Heading */}
         <h1 className="text-4xl font-bold text-cyan-300 mb-3 leading-tight">
