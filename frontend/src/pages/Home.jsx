@@ -17,13 +17,18 @@ const Home = () => {
         className="home-card glass-card text-center relative overflow-hidden"
       >
         {/* 🔥 Floating Train Icon */}
-        <motion.div
-  animate={{ y: [0, -10, 0] }}
-  transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-  className="text-8xl mb-5"
->
-  🚆
-</motion.div>
+        <div className="relative flex justify-center">
+  <div className="absolute w-28 h-28 bg-cyan-400/10 blur-xl rounded-full"></div>
+
+  <motion.div
+    animate={{ y: [0, -10, 0] }}
+    transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+    className="text-8xl"
+  >
+    🚆
+  </motion.div>
+</div>
+
 
 
         {/* Heading */}
