@@ -99,7 +99,7 @@ const Login = () => {
 
         <p className="text-gray-400 text-xs mt-5">
           Don’t have an account?{" "}
-          <Link to="/register" className="btn-glow w-full py-2 text-sm font-semibold">
+          <Link to="/register" className="nav-btn">
             Register
             </Link>
 
