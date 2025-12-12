@@ -122,3 +122,16 @@ html, body {
   color: white !important;
   transform: scale(1.03);
 }
+/* ====================================================
+   HOME PAGE — Premium Wider Card
+==================================================== */
+.home-card {
+  width: 650px;
+  max-width: 90%;
+  padding: 40px 32px;
+  border-radius: 18px;
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+  position: relative;
+}
