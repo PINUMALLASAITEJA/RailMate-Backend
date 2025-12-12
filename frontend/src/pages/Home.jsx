@@ -24,7 +24,7 @@ const Home = () => {
           <motion.div
             animate={{ y: [0, -12, 0] }}
             transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-            className="text-8xl"
+            className="text-15xl"
           >
             🚆
           </motion.div>
