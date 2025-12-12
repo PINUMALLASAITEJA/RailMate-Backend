@@ -149,3 +149,55 @@ select option {
   color: white !important;
   padding: 10px;
 }
+/* ----------------------------
+   Modal overlay + box (MyJourneys)
+   ---------------------------- */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 6, 12, 0.6); /* dim the background */
+  z-index: 9999; /* keep above everything */
+  padding: 20px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Modal content */
+.modal-box {
+  width: 100%;
+  max-width: 760px;      /* desktop size */
+  max-height: 90vh;      /* prevent overflow */
+  overflow: auto;        /* scroll inside modal if content large */
+  border-radius: 12px;
+  padding: 22px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(11,16,28,0.95); /* slightly opaque so background is visible */
+  backdrop-filter: blur(8px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 6px 18px rgba(0,255,255,0.04);
+}
+
+/* Close button */
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #bcd;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Keep modal content readable on small screens */
+@media (max-width: 640px) {
+  .modal-box {
+    padding: 18px;
+    max-width: 96%;
+  }
+}
