@@ -24,7 +24,7 @@ const Home = () => {
           <motion.div
             animate={{ y: [0, -12, 0] }}
             transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-            style={{ fontSize: "10rem", lineHeight: 1 }}   // 💥 Huge train
+            style={{ fontSize: "7rem", lineHeight: 1 }}   // 💥 Huge train
           >
             🚆
           </motion.div>
