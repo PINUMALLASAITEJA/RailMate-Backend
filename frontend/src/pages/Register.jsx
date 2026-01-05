@@ -52,7 +52,7 @@ const Register = () => {
           🧾 Create Your Account
         </h1>
         <p className="text-gray-400 text-xs mb-5">
-          Join RailMate — start your AI-powered journey today
+          Join RailMate — start your journey today
         </p>
 
         <form onSubmit={handleRegister} className="space-y-3 text-left">
