@@ -63,7 +63,7 @@ from routes.bookings_routes import bookings_bp
 from routes.cancel_booking import cancel_bp
 from routes.history_routes import history_bp
 
-app.register_blueprint(auth_bp)
+app.register_blueprint(auth_bp,url_prefix="/auth")
 app.register_blueprint(trains_bp)
 app.register_blueprint(booking_bp)
 app.register_blueprint(bookings_bp)
